@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://jmw.sh/about/</loc>
+  </url><url>
+    <loc>https://jmw.sh/projects/vgdownloader/</loc>
+    <lastmod>2022-02-17T22:16:32+00:00</lastmod>
+  </url><url>
+    <loc>https://jmw.sh/writings/greatness-dijkstra/</loc>
+    <lastmod>2022-02-17T22:16:32+00:00</lastmod>
+  </url><url>
+    <loc>https://jmw.sh/</loc>
+    <lastmod>2022-02-17T22:16:32+00:00</lastmod>
+  </url><url>
+    <loc>https://jmw.sh/projects/</loc>
+    <lastmod>2022-02-17T22:16:32+00:00</lastmod>
+  </url><url>
+    <loc>https://jmw.sh/writings/</loc>
+    <lastmod>2022-02-17T22:16:32+00:00</lastmod>
+  </url><url>
+    <loc>https://jmw.sh/categories/</loc>
+  </url><url>
+    <loc>https://jmw.sh/tags/</loc>
+  </url>
+</urlset>
