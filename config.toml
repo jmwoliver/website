@@ -6,6 +6,9 @@ pygmentsstyle = "monokai"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 
+# summarylength doesn't work right: https://discourse.gohugo.io/t/hugo-summarylength-doesnt-work/20881
+# summarylength = 20
+
 [params]
 	mode="toggle" # color-mode → light,dark,toggle or auto
 	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
@@ -32,18 +35,18 @@ url = "https://linkedin.com/in/jmwoliver/"
 # Main menu Items
 
 [[menu.main]]
-name = "Home"
-url = "/"
-weight = 1
-
-[[menu.main]]
 name = "Projects"
 url = "/projects"
-weight = 2
+weight = 1
 
 [[menu.main]]
 name = "Writings"
 url = "/writings"
+weight = 2
+
+[[menu.main]]
+name = "Tags"
+url = "/tags"
 weight = 3
 
 [[menu.main]]
