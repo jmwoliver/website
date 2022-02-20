@@ -1,5 +1,6 @@
 ---
-title: "Greatness & Dijkstra"
+title: "Approximation for the Future and the Euler Method"
+description: Figuring out how to approximate the path you want to take in a productive way
 date: Thu Feb 17 22:16:32 EST 2022
 draft: true
 ---

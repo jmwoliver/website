@@ -6,25 +6,24 @@
     <description>Recent content on Jacob Woliver</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Feb 2022 22:16:32 +0000</lastBuildDate><atom:link href="https://jmw.sh/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Feb 2022 09:07:25 +0000</lastBuildDate><atom:link href="https://jmw.sh/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About Me</title>
       <link>https://jmw.sh/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://jmw.sh/about/</guid>
-      <description>Hello! This is a place for me to make lame things so I can eventually make great things. I currently do backend Go development for RStudio on the Package Manager team. I have a personal interest in computer graphics and making neat little things.
+      <description>Hello! This is a place for me to make lame things so I can eventually make great things. I currently do backend Go development at RStudio on the Package Manager team. I have a personal interest in computer graphics and game engines with an affinity towards making neat little bits and bobs.
 Feel free to reach out with any of the contacts below!</description>
     </item>
     
     <item>
-      <title>CLI to Download Any Video Game Soundtrack</title>
+      <title>VGDownloader: Download Video Game Music</title>
       <link>https://jmw.sh/projects/vgdownloader/</link>
-      <pubDate>Thu, 17 Feb 2022 22:16:32 +0000</pubDate>
+      <pubDate>Sat, 19 Feb 2022 09:07:25 +0000</pubDate>
       
       <guid>https://jmw.sh/projects/vgdownloader/</guid>
-      <description>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.
-Heading 1 Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio.</description>
+      <description>VGDownloader is a lightweight CLI that lets you download (almost) any video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and work groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.</description>
     </item>
     
     <item>

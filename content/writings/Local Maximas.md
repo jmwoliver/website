@@ -1,6 +1,6 @@
 ---
-title: "Greatness & Dijkstra"
-date: Thu Feb 17 22:16:32 EST 2022
+title: "Local Maximas"
+date: Wed Feb 16 22:16:32 EST 2022
 draft: true
 ---
 
