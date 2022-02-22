@@ -16,7 +16,7 @@ Have you ever gone to StackOverflow to research a question for work and next thi
 
 This extension removes the annoying parts of the sidebar entirely! It does away with job offers, hot network questions, etc, and only leaves the Related section. Don't waste your day on BBQ Sausages any longer, download [StackOverflow Prettifier](https://addons.mozilla.org/en-US/firefox/addon/stack-overflow-prettifier/) today!
 
-# Limitations
+# Limitations and Next Steps
 
 * It'd be nice to be able to toggle certain sections on/off depending on if you like them (but who really cares about hot network questions?)
 * StackOverflow seems to change the IDs that I search on every once in a while, which breaks things. It'd be better if the extension was a little more resilient to that.
