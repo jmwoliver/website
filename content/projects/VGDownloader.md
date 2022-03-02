@@ -153,7 +153,7 @@ I thought it'd be fun to throw together some performance testing to see how well
 1. An album with 10 songs (`4 MB` total)
 2. An album with 76 songs (`299 MB` total)
 
-I ran the test 10 times for each album with both scenarios to try to get a good average of the performance. For this test, I made a custom version of VGDownloader that bypasses the PromptUI bits and uses command line arguments to pass in the album URL and whether or not it is concurrent on sequential. It should be noted that the following numbers are obviously dependent on CPU speeds and download rates, but with those things being (relatively) constant on my machine, the numbers are still interesting and useful. Here is the raw output from my tests:
+I ran the test 10 times for each album with both scenarios to try to get a good average of the performance. For this test, I made a custom version of VGDownloader that bypasses the PromptUI bits and uses command line arguments to pass in the album URL and whether or not it is concurrent or sequential. It should be noted that the following numbers are obviously dependent on CPU speeds and download rates, but with those things being (relatively) constant on my machine, the numbers are still interesting and useful. Here is the raw output from my tests:
 
 ```bash
 Concurrent - 10 songs (4 MB)
