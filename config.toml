@@ -6,6 +6,9 @@ pygmentsstyle = "monokai"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 
+[markup.goldmark.renderer]
+unsafe = true
+
 # summarylength doesn't work right: https://discourse.gohugo.io/t/hugo-summarylength-doesnt-work/20881
 # summarylength = 20
 

@@ -5,6 +5,8 @@ tags: [Go, Compilers]
 draft: true
 ---
 
+<iframe height="450px" width="90%" src="https://editor.p5js.org/jmwoliver/full/qCVY4mpV_"></iframe>
+
 This is an interpreter written in Go for the `monkey` programming language. The specs for `monkey`, as well as the steps to implement it, are outlined in the book [Writing an Interpreter in Go](https://interpreterbook.com/) by Thorsten Ball.
 
 This post gives a high-level overview of how interpreters work, as well as shows some `monkey` code in action. The source code of my implementation can be found on [GitHub](https://github.com/jmwoliver/monkey-interpreter).
