@@ -10,7 +10,7 @@ I was recently working on a feature that would allow a client to upload multiple
 
 My first approach was pretty simple - create a worker pool of threads and upload each file concurrently and independently. This worked pretty well because none of the server code had to change. All that was required was basically throwing each file path into a Go `channel` and letting the worker threads make the API calls.
 
-Through more discussion, I found there was a requirement of adding all of these files to the database in a single transaction. With the naive approach, I was making `N` seperate calls to the API and `N` seperate commits to the database without an easy way of saying "hey all of these are related and should be counted as one transaction."
+Through more discussion, I found there was a requirement of adding all of these files to the database in a single transaction. With the naive approach, I was making `N` seperate calls to the API and `N` seperate commits to the database without an easy way of saying "hey all of these are related and should be counted as one transaction." So although this method worked well and was easy to implement, I needed a different approach to meet the necessary requirements.
 
 # Better Approach
 
