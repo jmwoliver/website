@@ -13,10 +13,11 @@ unsafe = true
 # summarylength = 20
 
 [params]
-	mode="toggle" # color-mode → light,dark,toggle or auto
-	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
-    subtitle="[make lame things so I can eventually make great things](paulgraham.com/early.html)"
-    homeDisplay=2
+mode="toggle" # color-mode → light,dark,toggle or auto
+useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
+subtitle="[make lame things so I can eventually make great things](paulgraham.com/early.html)"
+homeDisplay=2
+favicon = "/favicon.png"
 
 # Social Tags
 
@@ -24,11 +25,6 @@ unsafe = true
 name = "GitHub"
 icon = "github"
 url = "https://github.com/jmwoliver"
-
-[[params.social]]
-name = "Twitter"
-icon = "twitter"
-url = "https://twitter.com/jacobwoliver/"
 
 [[params.social]]
 name = "LinkedIn"
