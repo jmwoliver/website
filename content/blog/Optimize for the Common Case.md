@@ -37,7 +37,7 @@ This closely maps to an idea James Clear presents in [Atomic Habits](https://jam
 
 He goes on to say that if you get 1 percent better each day for one year, you’ll end up thirty-seven times better than when you started. The flip side of that is if you get 1 percent worse each day for a year, you’ll decline to basically zero. We get so discouraged when our habits of going to the gym or improving a skill don’t seem to be bearing any fruit, but we need to remember the graph that I stole from his book:
 
-{{< figure src="/1%_better_every_day.png" title="1% Better Everyday Graph from Atomic Habits">}}
+{{< figure src="/1_better_every_day.png" title="1% Better Everyday Graph from Atomic Habits">}}
 
 The curve starts out really slow, almost imperceptible. But as the improvements compound over time, the effects are huge and you rocket blast to excellence.
 

@@ -1,7 +1,6 @@
 ---
 title: "StackOverflow Prettifier: Make StackOverflow Not Bad"
 date: Sat Aug 31 09:07:25 EST 2019
-tags: [Javascript, Extensions]
 ---
 
 [StackOverflow Prettifier](https://addons.mozilla.org/en-US/firefox/addon/stack-overflow-prettifier/) is a Firefox extention that that hides all the pointless features of StackOverflow and leaves only the useful bits.

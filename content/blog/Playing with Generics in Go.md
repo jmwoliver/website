@@ -1,7 +1,6 @@
 ---
 title: "Playing with Generics in Go: Making Event Payloads More Extensible"
 date: Sat May 7 16:59:16 EDT 2022
-tags: [Go]
 ---
 
 With the advent of generics in [Go 1.18](https://go.dev/blog/go1.18), I wanted to spend some time getting familiar with them. At a previous job, I wrote a microservice in Go that handled incoming events from a message queue and looked at their type to determine what to do with them. When writing that service, I always felt like generics would be a good fit to ease some of the pains I had when implementing all the possible payload types. Since I don't work there anymore, I'll just shout into the void and write about it here instead.
