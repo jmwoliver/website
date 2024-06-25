@@ -1,148 +1,408 @@
 <!DOCTYPE html>
-<html><head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>VGDownloader: Download Video Game Music - Jacob Woliver</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="VGDownloader is a lightweight CLI that lets you download (almost) any video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and work groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website." />
-	<meta property="og:image" content=""/>
-	<meta property="og:title" content="VGDownloader: Download Video Game Music" />
-<meta property="og:description" content="VGDownloader is a lightweight CLI that lets you download (almost) any video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and work groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://jmw.sh/projects/vgdownloader/" /><meta property="article:section" content="projects" />
-<meta property="article:published_time" content="2022-02-19T09:07:25+00:00" />
-<meta property="article:modified_time" content="2022-02-19T09:07:25+00:00" />
+<html lang="en">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="VGDownloader: Download Video Game Music"/>
-<meta name="twitter:description" content="VGDownloader is a lightweight CLI that lets you download (almost) any video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and work groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website."/>
-<script src="https://jmw.sh/js/feather.min.js"></script>
-	
-	
-        <link href="https://jmw.sh/css/fonts.b685ac6f654695232de7b82a9143a46f9e049c8e3af3a21d9737b01f4be211d1.css" rel="stylesheet">
-	
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/images/favicon.png" />
+<title>VGDownloader: Download Any Video Game Soundtrack | </title>
+<meta name="title" content="VGDownloader: Download Any Video Game Soundtrack" />
+<meta name="description" content="VGDownloader is a lightweight CLI that lets you download any* video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website." />
+<meta name="keywords" content="Go,Video Games," />
 
-	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jmw.sh/css/main.14c3ca5aea8e835056be586fdf2d7774334cc6e460c74200d5d70dce0095a123.css" />
-		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://jmw.sh/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css"  disabled />
-	
-	
-	
+
+<meta property="og:url" content="http://localhost:1313/projects/vgdownloader/">
+  <meta property="og:site_name" content="Hugo ʕ•ᴥ•ʔ Bear">
+  <meta property="og:title" content="VGDownloader: Download Any Video Game Soundtrack">
+  <meta property="og:description" content="VGDownloader is a lightweight CLI that lets you download any* video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2021-06-20T10:07:25+00:00">
+    <meta property="article:modified_time" content="2021-06-20T10:07:25+00:00">
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Video Games">
+    <meta property="og:image" content="http://localhost:1313/images/share.png">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/share.png">
+  <meta name="twitter:title" content="VGDownloader: Download Any Video Game Soundtrack">
+  <meta name="twitter:description" content="VGDownloader is a lightweight CLI that lets you download any* video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.">
+
+
+
+
+  <meta itemprop="name" content="VGDownloader: Download Any Video Game Soundtrack">
+  <meta itemprop="description" content="VGDownloader is a lightweight CLI that lets you download any* video game soundtrack. Written in Go and built on PromptUI, it pings downloads.khinsider.com to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.">
+  <meta itemprop="datePublished" content="2021-06-20T10:07:25+00:00">
+  <meta itemprop="dateModified" content="2021-06-20T10:07:25+00:00">
+  <meta itemprop="wordCount" content="1698">
+  <meta itemprop="image" content="http://localhost:1313/images/share.png">
+  <meta itemprop="keywords" content="Go,Video Games">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+  div.highlight pre {
+    background-color: initial;
+    color: initial;
+  }
+
+  div.highlight code {
+    background-color: unset;
+    color: unset;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
 </head>
+
 <body>
-        <div class="content"><header>
-	<div class="main">
-		<div>Jacob Woliver</div>
-	</div>
-	<nav>
-		
-		<a href="/">Home</a>
-		
-		<a href="/projects">Projects</a>
-		
-		<a href="/writings">Writings</a>
-		
-		<a href="/about">About</a>
-		
-		| <a id="dark-mode-toggle" onclick="toggleTheme()" href=""></a>
-		<script src="https://jmw.sh/js/themetoggle.js"></script>
-		
-	</nav>
+  <header><a href="/" class="title">
+  <h2></h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
 </header>
+  <main>
 
-<main>
-	<article>
-		<div class="title">
-			<h1 class="title">VGDownloader: Download Video Game Music</h1>
-			 <div class="meta">Posted on Feb 19, 2022</div> 
-		</div>
-		
-
-		<section class="body">
-			<p><a href="https://github.com/jmwoliver/VGDownloader/">VGDownloader</a> is a lightweight CLI that lets you download (almost) any video game soundtrack. Written in Go and built on <a href="https://github.com/manifoldco/promptui">PromptUI</a>, it pings <a href="https://downloads.khinsider.com/">downloads.khinsider.com</a> to retrieve the album for download. It uses channels and work groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.</p>
-<!-- raw HTML omitted -->
-<figure><img src="./vgdownloader_demo.gif"/><figcaption>
-            <h4>VGDownloader in Action</h4>
-        </figcaption>
+<content>
+  <p><a href="https://github.com/jmwoliver/VGDownloader/">VGDownloader</a> is a lightweight CLI that lets you download any<!-- raw HTML omitted -->* <!-- raw HTML omitted --> video game soundtrack. Written in Go and built on <a href="https://github.com/manifoldco/promptui">PromptUI</a>, it pings <a href="https://downloads.khinsider.com/">downloads.khinsider.com</a> to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.</p>
+<figure><img src="/vgdownloader.gif"><figcaption>
+      <h4>VGDownloader in Action</h4>
+    </figcaption>
 </figure>
 
-<p>{{ <!-- raw HTML omitted --> }}</p>
-<p>TODO:</p>
-<ul>
-<li>Figure out how to put gif in this .md</li>
-<li>Show some concurrent code</li>
-<li>Maybe make a graph of downloading sequentially vs. concurrently</li>
-<li>Current limitations / issues</li>
-</ul>
-<h1 id="heading-1">Heading 1</h1>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h2 id="heading-2">Heading 2</h2>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h3 id="heading-3">Heading 3</h3>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h4 id="heading-4">Heading 4</h4>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h5 id="heading-5">Heading 5</h5>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h6 id="heading-6">Heading 6</h6>
-<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
-<h2 id="typography">Typography</h2>
-<p>Lid est laborum et dolorum fuga, This is <a href="http://example.com/" title="Title">an example</a> inline link. Et harum quidem rerum facilis, <strong>This is bold</strong> and <em>emphasis</em> cumque nihilse impedit quo minus id quod amets untra dolor amet sad. While this is <code>code block()</code> and following is a <code>pre</code> tag</p>
-<pre><code>print 'this is pre tag'
-</code></pre>
-<p>Following is the syntax highlighted code block</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getCookie</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">r</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Cookie</span>, <span style="color:#66d9ef">error</span>) {
-	<span style="color:#a6e22e">rd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>)
-	<span style="color:#a6e22e">cookie</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Cookie</span>(<span style="color:#a6e22e">name</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
-	}
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cookie</span>, <span style="color:#66d9ef">nil</span>
-}
+<p><em><!-- raw HTML omitted -->*<!-- raw HTML omitted -->The selection is dependent on it being among the 8TB+ of music available on <a href="https://downloads.khinsider.com/">downloads.khinsider.com</a>. Notable omissions include Square Enix soundtracks because the authors asked it to be removed. You can find a complete blacklist <a href="https://downloads.khinsider.com/blacklist">here</a>.</em></p>
+<h1 id="overview">Overview</h1>
+<p>As a broad overview of how VGDownloader works, it will ask the user for an album they want, search for it, then download the songs in the album. Put into a diagram, it looks like this:</p>
+<figure><img src="/vgdownloader_diagram.png"><figcaption>
+      <h4>VGDownloader Diagram</h4>
+    </figcaption>
+</figure>
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">setCookie</span>(<span style="color:#a6e22e">cookie</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Cookie</span>, <span style="color:#a6e22e">w</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span> {
-	<span style="color:#75715e">// Get write interface registered using `Acquire` method in handlers.
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">wr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">w</span>.(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>)
-	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">SetCookie</span>(<span style="color:#a6e22e">wr</span>, <span style="color:#a6e22e">cookie</span>)
-	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
-}
-</code></pre></div><p>This is blockquote, Will make it <em>better now</em></p>
-<blockquote>
-<p>&lsquo;I want to do with you what spring does with the cherry trees.&rsquo; <!-- raw HTML omitted -->cited ~Pablo Neruda<!-- raw HTML omitted -->*</p>
-</blockquote>
-<blockquote>
-<p>Et harum quidem <em>rerum facilis</em> est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit</p>
-</blockquote>
-<p>Unordered list</p>
-<ul>
-<li>Red</li>
-<li>Green</li>
-<li>Blue</li>
-</ul>
-<p>Ordered list</p>
+<p>The important parts to note are identifying which sections need to be sequential (e.g. getting user input) and which can be parallelized. The diagram does a good job at showing when things can be made concurrent and luckily it&rsquo;s all the cool parts. The <code>Concurrent Downloads</code> section later on will go into more detail of how channels and wait groups are used to speed up the download process.</p>
+<h1 id="promptui">PromptUI</h1>
+<p>I wanted to give a little section for <a href="https://github.com/manifoldco/promptui">PromptUI</a> because I have used it in a few projects and always enjoy working with it. It&rsquo;s an interactive CLI framework written in Go that makes it really easy to display, filter, and select items from lists all from the terminal. I&rsquo;ll outline below the few places I found it useful.</p>
+<h2 id="getting-the-title-of-the-game">Getting the Title of the Game</h2>
+<p>I&rsquo;m able to use the interactive CLI by typing in the title of the game I want. To make a prompt with PromptUI, all it takes here is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getTitle</span>() (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">prompt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">promptui</span>.<span style="color:#a6e22e">Prompt</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Label</span>: <span style="color:#e6db74">&#34;Game Title&#34;</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">title</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">prompt</span>.<span style="color:#a6e22e">Run</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">title</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s all it takes. That will allow a user to type a string in and return the string, all in a pretty interface.</p>
+<h2 id="search-through-available-albums">Search Through Available Albums</h2>
+<p>Once the title is returned, it calls the site to search for the album, then uses another prompt to display all available options:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">selectAlbum</span>(<span style="color:#a6e22e">albumList</span> []<span style="color:#a6e22e">reps</span>.<span style="color:#a6e22e">AlbumList</span>) (<span style="color:#a6e22e">reps</span>.<span style="color:#a6e22e">AlbumList</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">templates</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">promptui</span>.<span style="color:#a6e22e">SelectTemplates</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Active</span>:   <span style="color:#e6db74">&#34;⇀ {{ .Title | cyan }}&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Inactive</span>: <span style="color:#e6db74">&#34;  {{ .Title | red }}&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Selected</span>: <span style="color:#e6db74">&#34;{{ .Title | cyan }}&#34;</span>}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">prompt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">promptui</span>.<span style="color:#a6e22e">Select</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Label</span>:     <span style="color:#e6db74">&#34;Select Album&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Items</span>:     <span style="color:#a6e22e">albumList</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Templates</span>: <span style="color:#a6e22e">templates</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Size</span>:      <span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">index</span>, <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">prompt</span>.<span style="color:#a6e22e">Run</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">reps</span>.<span style="color:#a6e22e">AlbumList</span>{}, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">albumList</span>[<span style="color:#a6e22e">index</span>], <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This uses some custom templating to make it look how I want it to, but other than that it is pretty straightforward. You just throw the slice of items into a <code>Select</code> prompt and it will display all of them nicely. You can filter and search through them, then select the one that you want. Once you get the album URL to download from, now it is time to get wacky, wild, and wacky to concurrently download all the tracks.</p>
+<h1 id="concurrent-downloads">Concurrent Downloads</h1>
+<p>The actual cool part of VGDownloader is how it concurrently gets the links to download the files, then conconcurrently downloads the files. Like the diagram above shows, it has to iterate through the HTML to get each download link for each song. Only once it has the link can it download the song. However, getting the link and downloading the song is independent for each song - making this able to be made concurrent.</p>
+<h2 id="channels">Channels</h2>
+<p>A <code>links</code> channel is made to store all song URLs that are scraped from the HTML:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">links</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span>, <span style="color:#ae81ff">100</span>)
+</span></span></code></pre></div><p>Note: having a buffered channel of 100 isn&rsquo;t really necessary because the real bottleneck is the downloading of the songs. We just want to make sure that the song links get passed to the function that downloads the songs as fast as possible.</p>
+<p>Once the buffered channel is made, it call <code>getSongLinks()</code> in a goroutine:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getSongLinks</span>(<span style="color:#a6e22e">doc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">goquery</span>.<span style="color:#a6e22e">Document</span>, <span style="color:#a6e22e">links</span> <span style="color:#66d9ef">chan</span><span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">total</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">doc</span>.<span style="color:#a6e22e">Find</span>(<span style="color:#e6db74">&#34;.playlistDownloadSong &gt; a&#34;</span>).<span style="color:#a6e22e">Each</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">i</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">goquery</span>.<span style="color:#a6e22e">Selection</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">link</span>, <span style="color:#a6e22e">exist</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Attr</span>(<span style="color:#e6db74">&#34;href&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">exist</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">links</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%s%s&#34;</span>, <span style="color:#a6e22e">reps</span>.<span style="color:#a6e22e">BaseURL</span>, <span style="color:#a6e22e">link</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span><span style="color:#a6e22e">total</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>	close(<span style="color:#a6e22e">links</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This gets the link from the <code>href</code> and passes it into the channel. Once it gets all the links, it will close out the channel. This lets the function reading from the links know when it is all done and ready to go bye-bye.</p>
+<h2 id="wait-groups">Wait Groups</h2>
+<p>Speaking of the function that calls the channel, here it is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">downloadSongs</span>(<span style="color:#a6e22e">links</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">albumName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">total</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reps</span>.<span style="color:#a6e22e">NewSpinner</span>(<span style="color:#e6db74">&#34;Completed...&#34;</span>, <span style="color:#a6e22e">total</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span> <span style="color:#f92672">:=</span> new(<span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">completed</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Loading</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">completed</span>, <span style="color:#a6e22e">total</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">link</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">links</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fileName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%v.mp3&#34;</span>, <span style="color:#a6e22e">completed</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">downloadSong</span>(<span style="color:#a6e22e">wg</span>, <span style="color:#a6e22e">link</span>, <span style="color:#a6e22e">fileName</span>, <span style="color:#a6e22e">albumName</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">completed</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Finished</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This creates the <code>sync.WaitGroup</code> and adds to it when it calls <code>downloadSong()</code> in a goroutine. Then it waits until all the downloads are done with <code>wg.Wait()</code>. But how does it know when it&rsquo;s done? That is achieved in the next function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">downloadSong</span>(<span style="color:#a6e22e">wg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>, <span style="color:#a6e22e">link</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">fileName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">albumName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">completed</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">doc</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getDocument</span>(<span style="color:#a6e22e">link</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">encodedUrl</span>, <span style="color:#a6e22e">exist</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">doc</span>.<span style="color:#a6e22e">Find</span>(<span style="color:#e6db74">&#34;#EchoTopic &gt; p &gt; a[href*=&#39;vgmsite&#39;]&#34;</span>).<span style="color:#a6e22e">Eq</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Attr</span>(<span style="color:#e6db74">&#34;href&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">exist</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">downloadFile</span>(<span style="color:#a6e22e">encodedUrl</span>, <span style="color:#a6e22e">albumName</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#e6db74">&#34;%v\n&#34;</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span><span style="color:#a6e22e">completed</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>downloadSong()</code> will call <code>wg.Done()</code> to let the WaitGroup know that it has finished downloading that song. Since each song is tossed into a goroutine, it will increment the WaitGroup up to the number of total songs in the album, then concurrently decrement as each song finishes. Once the WaitGroup count is 0, that&rsquo;s when it knows everything has finished downloading.</p>
+<h1 id="performance-comparisons">Performance Comparisons</h1>
+<p>I thought it&rsquo;d be fun to throw together some performance testing to see how well this works with varying album sizes. I wanted to test to see how much faster concurrently downloading albums was vs. downloading each song sequentially. To test this, I came up with two different scenarios:</p>
 <ol>
-<li>Red</li>
-<li>Green</li>
-<li>Blue</li>
+<li>An album with 10 songs (<code>4 MB</code> total)</li>
+<li>An album with 76 songs (<code>299 MB</code> total)</li>
 </ol>
+<p>I ran the test 10 times for each album with both scenarios to try to get a good average of the performance. For this test, I made a custom version of VGDownloader that bypasses the PromptUI bits and uses command line arguments to pass in the album URL and whether or not it is concurrent or sequential. It should be noted that the following numbers are obviously dependent on CPU speeds and download rates, but with those things being (relatively) constant on my machine, the numbers are still interesting and useful. Here is the raw output from my tests:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Concurrent - <span style="color:#ae81ff">10</span> songs <span style="color:#f92672">(</span><span style="color:#ae81ff">4</span> MB<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Average after <span style="color:#ae81ff">10</span> runs: 3.5045613765716555 seconds
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Sequential - <span style="color:#ae81ff">10</span> songs <span style="color:#f92672">(</span><span style="color:#ae81ff">4</span> MB<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Average after <span style="color:#ae81ff">10</span> runs: 7.856122016906738 seconds
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Concurrent - <span style="color:#ae81ff">76</span> songs <span style="color:#f92672">(</span><span style="color:#ae81ff">299</span> MB<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Average after <span style="color:#ae81ff">10</span> runs: 86.71255302429199 seconds
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Sequential - <span style="color:#ae81ff">76</span> songs <span style="color:#f92672">(</span><span style="color:#ae81ff">299</span> MB<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Average after <span style="color:#ae81ff">10</span> runs: 325.70889987945554 seconds
+</span></span></code></pre></div><p>The graph displays the time that it took for each album with sequential and concurrent downloads:</p>
+<p><figure><img src="/10songs_graph.png"><figcaption>
+      <h4>10 Songs Graph</h4>
+    </figcaption>
+</figure>
 
-		</section>
+<figure><img src="/76songs_graph.png"><figcaption>
+      <h4>76 Songs Graph</h4>
+    </figcaption>
+</figure>
+</p>
+<p>As you can see, the results are pretty apparent. For small albums, downloading the songs concurrently roughly cuts the time in half. The scale of the y-axis is important here though - it takes over 300+ seconds for downloading the large album sequentially, on average. For larger albums, the time savings are even more amplified, leading to nearly a 4x speedup. Downloading 70+ songs really benefits from downloading at the same time because of the benefits of pipelining. When downloading that many songs, it can fetch the links and start downloading as soon as they are available, leading to the bottleneck being the largest files taking longer to finish. But when doing them one at a time, each one has to take its turn, not allowing anything to be done while its waiting.</p>
+<p>These results were to be expected, but it was fun to put some numbers to it.</p>
+<h1 id="limitations-and-next-steps">Limitations and Next Steps</h1>
+<h2 id="song-naming">Song Naming</h2>
+<p>My biggest annoyance making this was that you can only get the metadata of the song after it has finished downloading. When I originally made this, I would name the songs <code>1.mp3</code>, <code>2.mp3</code>, &hellip;, then reopen the file to rename it with the provided metadata. When doing this concurrently, it was causing collisions that made it explode.</p>
+<p>I ended up using a worse alternative of getting the name found within the URL. The problem is it&rsquo;s not always formatted properly, but it gave a simplest solution that was more resilient to breakages.</p>
+<p>Another option would be to get the name by scraping the page, but the site doesn&rsquo;t use consistent ID or class tags in the HTML for the song name (or anything), so it would be difficult to quickly get the name of the song when getting the download link.</p>
+<h2 id="no-external-api">No External API</h2>
+<p>A broader issue is that there is no API so I have to scrape everything. An API would make this much easier and would probably help provide more functionality than what I have. But I&rsquo;m currently being a vagrant, stealing bandwidth for free from the site, so beggars can&rsquo;t be choosers I guess.</p>
+<h2 id="miscellaneous">Miscellaneous</h2>
+<p>A few other rapid fire things that came up while making this:</p>
+<ul>
+<li>The <code>getDocument()</code> function feels slow for what it does. I want to see if there is a better/faster way to get the HTML.</li>
+<li>I create the output directory with <code>777</code> permissions&hellip; probably not the best.</li>
+<li>If there is no album available, it will get some random sidebar content, which is jarring. Would be good to figure out how to know when no albums are available and tell that to the user.</li>
+<li>The site supports both MP3 and FLAC for some albums. It would be nice to add the ability to pass in a <code>--flac</code> flag. This would download the FLAC version of the songs if they are available. If they are not, then it will default back to MP3.</li>
+</ul>
 
-		<div class="post-tags">
-			
-			
-			
-		</div>
-	</article>
-</main>
-<footer>
-  <div style="display:flex"><a class="soc" href="https://github.com/jmwoliver" title="GitHub"><i data-feather="github"></i></a><a class="soc" href="https://twitter.com/jacobwoliver/" title="Twitter"><i data-feather="twitter"></i></a><a class="soc" href="https://linkedin.com/in/jmwoliver/" title="LinkedIn"><i data-feather="linkedin"></i></a></div>
-  <div class="footer-info">
-    jacob@jmw.sh
-  </div>
+</content>
+<p>
+  
+  <a href="http://localhost:1313/blog/go/">#Go</a>
+  
+  <a href="http://localhost:1313/blog/video-games/">#Video Games</a>
+  
+</p>
+
+  </main>
+  <footer>
 </footer>
 
+    
+</body>
 
-<script>
-  feather.replace()
-</script></div>
-    </body>
 </html>

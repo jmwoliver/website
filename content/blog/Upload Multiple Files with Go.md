@@ -1,7 +1,6 @@
 ---
 title: "Upload Multiple Files with Go"
 date: Sat Apr 30 11:55:38 EDT 2022
-tags: [Go]
 ---
 
 I was recently working on a feature that would allow a client to upload multiple files to a server. There was already a method to upload one file with a `POST` of type `multipart/form-data`, but it was limiting to upload one file at a time. Because of this, I started looking at what the best method would be to handle uploading multiple files in bulk. I tried a few different approaches until I stumbled upon the fact that `multipart/form-data` already supports uploading multiple files in one request. A [client/server demo can be pulled from Github](https://github.com/jmwoliver/multifile-upload) if you want to try it out for yourself. I'll describe below some of my journey to get to this solution.

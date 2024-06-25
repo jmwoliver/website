@@ -1,70 +1,385 @@
 <!DOCTYPE html>
-<html><head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Writings - Jacob Woliver</title><meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="" />
-	<meta property="og:image" content=""/>
-	<link rel="alternate" type="application/rss+xml" href="https://jmw.sh/writings/index.xml" title="Jacob Woliver" />
-	<meta property="og:title" content="Writings" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://jmw.sh/writings/" />
+<html lang="en">
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Writings"/>
-<meta name="twitter:description" content=""/>
-<script src="https://jmw.sh/js/feather.min.js"></script>
-	
-	
-        <link href="https://jmw.sh/css/fonts.b685ac6f654695232de7b82a9143a46f9e049c8e3af3a21d9737b01f4be211d1.css" rel="stylesheet">
-	
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/images/favicon.png" />
+<title>Writings | </title>
+<meta name="title" content="Writings" />
+<meta name="description" content="Jacob Woliver&#39;s Blog" />
+<meta name="keywords" content="algorithm,compilers,extensions,go,javascript,rust,video games," />
 
-	
-	<link rel="stylesheet" type="text/css" media="screen" href="https://jmw.sh/css/main.14c3ca5aea8e835056be586fdf2d7774334cc6e460c74200d5d70dce0095a123.css" />
-		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://jmw.sh/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css"  disabled />
-	
-	
-	
+
+<meta property="og:url" content="http://localhost:1313/writings/">
+  <meta property="og:site_name" content="Hugo ʕ•ᴥ•ʔ Bear">
+  <meta property="og:title" content="Writings">
+  <meta property="og:description" content="Jacob Woliver&#39;s Blog">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+    <meta property="og:image" content="http://localhost:1313/images/share.png">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Writings">
+  <meta name="twitter:description" content="Jacob Woliver&#39;s Blog">
+
+
+
+
+  <meta itemprop="name" content="Writings">
+  <meta itemprop="description" content="Jacob Woliver&#39;s Blog">
+  <meta itemprop="dateModified" content="2024-06-22T20:52:37+00:00">
+  <meta itemprop="image" content="http://localhost:1313/images/share.png">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <link rel="alternate" type="application/rss+xml" href="http://localhost:1313/writings/index.xml" title="" />
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+  div.highlight pre {
+    background-color: initial;
+    color: initial;
+  }
+
+  div.highlight code {
+    background-color: unset;
+    color: unset;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
 </head>
+
 <body>
-        <div class="content"><header>
-	<div class="main">
-		<div>Jacob Woliver</div>
-	</div>
-	<nav>
-		
-		<a href="/">Home</a>
-		
-		<a href="/projects">Projects</a>
-		
-		<a href="/writings">Writings</a>
-		
-		<a href="/about">About</a>
-		
-		| <a id="dark-mode-toggle" onclick="toggleTheme()" href=""></a>
-		<script src="https://jmw.sh/js/themetoggle.js"></script>
-		
-	</nav>
+  <header><a href="/" class="title">
+  <h2></h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
 </header>
+  <main>
+<content>
+  
+  <ul class="blog-posts">
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2024-06-22' pubdate>
+            2024-06-22
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/google-advertising-and-kagi/">Google&#39;s Stance on Advertising in 1998; The case for Kagi</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2023-04-05' pubdate>
+            2023-04-05
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/jacob-on-the-shortness-of-life/">Jacob on the Shortness of Life</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2023-01-11' pubdate>
+            2023-01-11
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/understanding-history-and-trade-offs/">Understanding History and Trade-offs</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-05-09' pubdate>
+            2022-05-09
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/guiding-principles/">Guiding Principles</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-05-07' pubdate>
+            2022-05-07
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/playing-with-generics-in-go/">Playing with Generics in Go: Making Event Payloads More Extensible</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-04-30' pubdate>
+            2022-04-30
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/upload-multiple-files-with-go/">Upload Multiple Files with Go</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-03-08' pubdate>
+            2022-03-08
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/optimize-for-the-common-case/">Optimize for the Common Case</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-03-05' pubdate>
+            2022-03-05
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/enjoy-the-process/">Enjoy the Process</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-03-01' pubdate>
+            2022-03-01
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/eulers-method-and-approximating-the-future/">Euler’s Method and Approximating the Future</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-02-17' pubdate>
+            2022-02-17
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/greatness--dijkstra/">Greatness &amp; Dijkstra</a>
+    </li>
+    
+    <li>
+      <span>
+        <i>
+          <time datetime='2022-02-16' pubdate>
+            2022-02-16
+          </time>
+        </i>
+      </span>
+      <a href="http://localhost:1313/writings/local-maximas/">Local Maximas</a>
+    </li>
+    
+  </ul>
+  
+    <small>
+      <div>
+        
+        <a href="http://localhost:1313/blog/algorithm/">#Algorithm</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/compilers/">#Compilers</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/extensions/">#Extensions</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/go/">#Go</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/javascript/">#Javascript</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/rust/">#Rust</a>&nbsp;
+        
+        <a href="http://localhost:1313/blog/video-games/">#Video Games</a>&nbsp;
+        
+      </div>
+    </small>
+    
+</content>
 
-
-
-<h1 class="page-title" style="text-transform: capitalize;">writings</h1>
-
-
-<ul class="posts"><li class="post">
-			<a href="/writings/greatness-dijkstra/">Greatness &amp; Dijkstra</a> <span class="meta">Feb 17, 2022</span>
-		</li></ul>
-<footer>
-  <div style="display:flex"><a class="soc" href="https://github.com/jmwoliver" title="GitHub"><i data-feather="github"></i></a><a class="soc" href="https://twitter.com/jacobwoliver/" title="Twitter"><i data-feather="twitter"></i></a><a class="soc" href="https://linkedin.com/in/jmwoliver/" title="LinkedIn"><i data-feather="linkedin"></i></a></div>
-  <div class="footer-info">
-    jacob@jmw.sh
-  </div>
+  </main>
+  <footer>
 </footer>
 
+    
+</body>
 
-<script>
-  feather.replace()
-</script></div>
-    </body>
 </html>

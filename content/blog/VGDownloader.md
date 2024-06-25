@@ -1,7 +1,6 @@
 ---
 title: "VGDownloader: Download Any Video Game Soundtrack"
 date: Sun Jun 20 09:07:25 EST 2021
-tags: [Go, Video Games]
 ---
 
 [VGDownloader](https://github.com/jmwoliver/VGDownloader/) is a lightweight CLI that lets you download any<sup>* </sup> video game soundtrack. Written in Go and built on [PromptUI](https://github.com/manifoldco/promptui), it pings [downloads.khinsider.com](https://downloads.khinsider.com/) to retrieve the album for download. It uses channels and wait groups to concurrently get the download links for every song in the album, downloading them all at the same time. This significantly reduces the amount of time to download the album vs. sequentially downloading from the website.

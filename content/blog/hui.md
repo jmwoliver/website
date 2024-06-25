@@ -1,7 +1,6 @@
 ---
 title: "hui: A visual alternative to history written in Rust"
 date: Thu May 18 14:15:24 EDT 2023
-tags: [Rust]
 ---
 
 `hui` is a command-line tool to visualize and search your shell history. The source code is available on [GitHub](https://github.com/jmwoliver/hui).
