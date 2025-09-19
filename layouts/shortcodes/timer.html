@@ -1,12 +1,1 @@
-
-<body>
-    <h2 id="currentTime"></h2>
-    <script>
-        const element = document.getElementById('currentTime');
-        
-        setInterval(function () {
-            date = new Date();
-            element.innerText = date.toISOString().split('T')[0] + " " + date.toLocaleTimeString('en-GB') + ":" + date.getMilliseconds();
-        }, 10);
-    </script>
-</body>
+<h2 class="dynamic-timer"></h2>

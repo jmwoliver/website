@@ -2,8 +2,6 @@
 # Set to the URL for your site
 baseURL = "https://jmw.sh/"
 
-theme = 'hugo-bearblog'
-
 # Basic metadata configuration for your blog.
 title = "Jacob Woliver"
 author = "Jacob Woliver"
@@ -15,21 +13,9 @@ languageCode = "en-US"
 # Generate a nice robots.txt for SEO
 enableRobotsTXT = true
 
-# Generate "Bearblog"-like URLs !only!, see https://bearblog.dev/.
-disableKinds = ["taxonomy"]
-ignoreErrors = ["error-disable-taxonomy"]
-[permalinks]
-  blog = "/:slug/"
-  tags = "/blog/:slug"
-
-[[menu.main]]
-name = "Projects"
-url = "/projects"
-weight = 1
-
 [params]
   # The "description" of your website. This is used in the meta data of your generated html.
-  description = "Jacob Woliver's Blog"
+  description = "Jacob's Desktop"
 
   hideReply = false
 
@@ -46,7 +32,7 @@ weight = 1
   # Another "title" :-). This one is used as the site_name on the Hugo's internal
   # opengraph structured data template.
   # See https://ogp.me/ and https://gohugo.io/templates/internal#open-graph.
-  title = "Jacob Woliver's Blog"
+  title = "Jacob's Desktop"
 
   # This theme will, by default, inject a made-with-line at the bottom of the page.
   # You can turn it off, but we would really appreciate if you don’t :-).
