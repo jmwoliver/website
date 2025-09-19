@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jacob's Desktop</title>
+<style>
+    body, html {
+        height: 100%; margin: 0; padding: 0; background: #3a3a3a;
+        font-family: 'Tahoma', sans-serif;
+        overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    .monitor {
+        background: #d8c29c; /* Beige color */
+        border: 2px solid #555;
+        border-radius: 10px;
+        padding: 120px; /* Thicker static bezels */
+        padding-bottom: 150px; /* Extra space at the bottom for the button */
+        box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.5);
+        position: relative;
+    }
+
+    .crt-container {
+        width: 80vw;
+        height: 60vw; /* 4:3 Aspect Ratio */
+        max-width: 1200px;
+        max-height: 900px;
+        background-color: #000;
+        background-image: url('/background.jpg');
+        background-size: cover; background-position: center; position: relative;
+        overflow: hidden; border: 2px solid #333;
+        transition: background-color 0.2s linear;
+    }
+
+    .crt-container::after {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        background-size: 100% 2px, 3px 100%; pointer-events: none; opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+    #boot-screen {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; display: flex; align-items: center; justify-content: center;
+        z-index: 100; opacity: 1; transition: opacity 1s ease-out;
+    }
+
+    #boot-screen img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* -- OFF STATE -- */
+    .crt-container.off { background-image: none; background-color: #000; }
+    .crt-container.off::after, .crt-container.off > #boot-screen {
+        opacity: 0; pointer-events: none;
+    }
+    .crt-container.off > .desktop-item {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.1s linear;
+    }
+    .crt-container.off > .power-off-blip { opacity: 1; animation: power-off-anim 0.4s linear forwards; }
+    .power-off-blip {
+        position: absolute; top: 50%; left: 0; width: 100%; height: 3px;
+        background: white; opacity: 0; pointer-events: none; z-index: 50;
+    }
+    @keyframes power-off-anim { 0% { transform: scale(1, 1); } 100% { transform: scale(0, 0); } }
+    
+    /* --- Monitor Button --- */
+    .power-button-area {
+        position: absolute;
+        bottom: 50px;
+        right: 70px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .power-button {
+        width: 40px; height: 40px; background: #777; border-radius: 50%;
+        border: 2px solid #555; cursor: pointer; box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    .power-button:active { background: #666; }
+    .led {
+        width: 8px; height: 8px; background-color: #3a3a3a; border-radius: 50%;
+        box-shadow: inset 0 0 3px rgba(0,0,0,0.5); transition: background-color 0.3s;
+    }
+    .led.on { background-color: #26ff00; box-shadow: 0 0 5px #26ff00; }
+
+    /* --- Desktop Items (Icons) --- */
+    .desktop-item {
+        position: absolute; text-align: center; color: white;
+        text-shadow: 1px 1px 2px black; opacity: 0; z-index: 10;
+        transition: opacity 0.5s ease-in; font-size: clamp(12px, 1.5vw, 14px);
+    }
+    .desktop-item.visible { opacity: 1; }
+    .desktop-icon { cursor: pointer; user-select: none; }
+    
+    .folder, .file {
+        top: 8%; width: 8vw; max-width: 100px;
+    }
+    #projects-icon { left: 5%; }
+    #blog-icon { left: 20%; }
+    #readme-icon { top: 30%; left: 5%; }
+    #gif-icon { top: 50%; left: 5%; }
+    
+    .folder .icon, .file .icon { font-size: clamp(30px, 4vw, 50px); }
+
+    /* --- Application Windows --- */
+    .window {
+        background: #ECE9D8;
+        border-top: 2px solid #fff; border-left: 2px solid #fff;
+        border-right: 2px solid #808088; border-bottom: 2px solid #808080;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+        display: none; flex-direction: column;
+    }
+    .window .title-bar {
+        background: linear-gradient(to right, #0A246A, #A6CAF0);
+        color: white; padding: 3px 5px; cursor: move;
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: clamp(12px, 1.3vw, 15px); font-weight: bold;
+    }
+    .window .close-btn {
+        background: #E86850; border: 1px solid black; color: white;
+        font-weight: bold; cursor: pointer; padding: 0 5px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .window .content { flex-grow: 1; background: #fff; }
+    
+    #notepad-window {
+        top: 20%; left: 30%; width: 40vw; height: 35vw;
+        max-width: 500px; max-height: 400px;
+    }
+    #notepad-window .content {
+        padding: 5px;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: pre-wrap;
+        overflow-y: auto;
+        font-size: 1em;
+        line-height: 1em;
+        color: #000000;
+        text-shadow: none;
+        text-align: left;
+    }
+    #notepad-window .content a {
+        color: #0000EE;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    #notepad-window .content a:visited {
+        color: #551A8B;
+    }
+
+    #preview-window {
+        top: 25%; left: 40%; width: 30vw; height: 30vw;
+        max-width: 400px; max-height: 400px;
+    }
+    #preview-window .content { padding: 0; overflow: hidden; background: #000; }
+    #preview-window img { width: 100%; height: 100%; object-fit: contain; }
+    
+    /* --- XP File Explorer Styles --- */
+    #explorer-window {
+        top: 15%; left: 25%; width: 45vw; height: 40vw;
+        max-width: 550px; max-height: 450px;
+    }
+    #explorer-window .content {
+        padding: 0; border: 1px solid #808080;
+        margin: 2px; overflow-y: auto;
+    }
+    .explorer-header {
+        display: flex; background: #F0F0F0; border-bottom: 1px solid #808080;
+        padding: 4px 8px; font-weight: bold;
+    }
+    .col-name { flex-grow: 1; }
+    .col-type { width: 150px; }
+    .file-listing {
+        display: flex; align-items: center; gap: 8px; padding: 4px 8px;
+        color: black; cursor: default; user-select: none;
+    }
+    .file-listing:hover { background: #316AC5; color: white; }
+    .file-listing .icon { font-style: normal; }
+
+    a.file-listing, a.file-listing:visited {
+        color: black;
+        text-decoration: none;
+    }
+    a.file-listing:hover { background: #316AC5; color: white; }
+
+    /* --- Word Window Styles --- */
+    #word-window {
+        top: 10%; left: 20%; width: 50vw; height: 60vw;
+        max-width: 700px; max-height: 800px;
+    }
+    #word-window .content {
+        padding: 30px;
+        font-family: 'Times New Roman', Times, serif;
+        color: #000;
+        text-shadow: none;
+        text-align: left;
+        overflow-y: auto;
+        background: #fff;
+        line-height: 1.5;
+    }
+    #word-window .content h1,
+    #word-window .content h2,
+    #word-window .content p {
+        margin-bottom: 1em;
+    }
+    #word-window .content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 1em auto;
+    }
+    
+    /* --- Screensaver --- */
+    #screensaver {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #000;
+        z-index: 90;
+        display: none;
+    }
+    #screensaver img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+</head>
+<body>
+
+<div class="monitor">
+    <div class="crt-container" id="desktop">
+        
+        <div id="boot-screen"><img src="/boot.gif" alt="Loading..."></div>
+        <div class="power-off-blip"></div>
+        
+        <div id="screensaver">
+            <img src="/screensaver.gif" alt="Pipes Screensaver">
+        </div>
+        
+        <div class="desktop-item desktop-icon folder" id="projects-icon"><div class="icon">📁</div>Projects</div>
+        <div class="desktop-item desktop-icon folder" id="blog-icon"><div class="icon">📁</div>Blog</div>
+        <div class="desktop-item desktop-icon file" id="readme-icon"><div class="icon">📄</div>README.md</div>
+        <div class="desktop-item desktop-icon file" id="gif-icon"><div class="icon">🖼️</div>funny.gif</div>
+        
+        <div class="desktop-item window" id="notepad-window">
+            <div class="title-bar"><span>README.md - Notepad</span><button class="close-btn">X</button></div>
+            <div class="content">Hello, I'm Jacob!
+
+I work at <a href="https://posit.co/" target="_blank">Posit</a> building data science tools. I mainly work on our Package Manager.
+
+I love making useful and non-useful things. Please explore my desktop to see some of my projects and blog posts. :)
+
+Feel free to reach out!
+
+- Email: <a href="mailto:jacob@jmw.sh">jacob@jmw.sh</a>
+- Github: <a href="https://github.com/jmwoliver" target="_blank">@jmwoliver</a>
+</div>
+        </div>
+        
+        <div class="desktop-item window" id="preview-window">
+            <div class="title-bar"><span>funny.gif - Preview</span><button class="close-btn">X</button></div>
+            <div class="content"><img src="/funny.gif" alt="Peanut Butter Jelly Time Banana GIF"></div>
+        </div>
+
+        <div class="desktop-item window" id="explorer-window">
+            <div class="title-bar"><span id="explorer-title"></span><button class="close-btn">X</button></div>
+            <div class="content" id="explorer-content"></div>
+        </div>
+        
+        <div class="desktop-item window" id="word-window">
+            <div class="title-bar"><span id="word-title"></span><button class="close-btn">X</button></div>
+            <div class="content" id="word-content">
+                </div>
+        </div>
+
+    </div>
+    <div class="power-button-area">
+        <div class="power-button" id="power-btn"></div>
+        <div class="led on" id="power-led"></div>
+    </div>
+</div>
+
+<script>
+    const crtScreen = document.getElementById('desktop');
+    const screensaver = document.getElementById('screensaver');
+    let inactivityTimer;
+    let activeTimerInterval = null;
+
+    // --- DYNAMIC File Database ---
+    const fileDatabase = {
+      "projects": [
+        { text: "hui: A visual alternative to history written in Rust", link: "https://github.com/jmwoliver/hui" },
+        { text: "VGDownloader: Download Any Video Game Soundtrack", link: "https://github.com/jmwoliver/VGDownloader" },
+        { text: "StackOverflow Prettifier: Make StackOverflow Not Bad", link: "https://addons.mozilla.org/en-US/firefox/addon/stack-overflow-prettifier/" }
+      ],
+      "blog": [
+        {{ range where .Site.RegularPages "Section" "blog" }}
+          { 
+            text: "{{ .Title }}", 
+            link: "{{ .Permalink }}",
+            content: `{{ printf `<h1>%s</h1><p><em>%s</em></p><hr>%s` .Title (.Date.Format "2006-01-02") .Content | safeJS }}`
+          },
+        {{ end }}
+      ],
+    };
+
+    function showScreensaver() {
+        if (!crtScreen.classList.contains('off')) {
+            screensaver.style.display = 'block';
+        }
+    }
+
+    function hideScreensaver() {
+        screensaver.style.display = 'none';
+    }
+
+    function resetInactivityTimer() {
+        hideScreensaver();
+        clearTimeout(inactivityTimer);
+        if (!crtScreen.classList.contains('off')) {
+            inactivityTimer = setTimeout(showScreensaver, 10000); // 10 seconds
+        }
+    }
+
+    window.onload = function() {
+        const bootScreen = document.getElementById('boot-screen');
+        const desktopIcons = document.querySelectorAll('.desktop-icon');
+        setTimeout(() => {
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                desktopIcons.forEach(item => item.classList.add('visible'));
+                resetInactivityTimer();
+            }, 300); 
+        }, 1000);
+    };
+
+    // --- Power Button Logic ---
+    const powerButton = document.getElementById('power-btn');
+    const powerLed = document.getElementById('power-led');
+    powerButton.addEventListener('click', () => {
+        crtScreen.classList.toggle('off');
+        powerLed.classList.toggle('on');
+        if (crtScreen.classList.contains('off')) {
+            clearTimeout(inactivityTimer);
+            hideScreensaver();
+        } else {
+            resetInactivityTimer();
+        }
+    });
+
+    // --- REUSABLE FUNCTION TO OPEN A BLOG POST ---
+    function openBlogPost(post) {
+        if (activeTimerInterval) {
+            clearInterval(activeTimerInterval);
+        }
+
+        const wordWindow = document.getElementById('word-window');
+        const wordTitle = document.getElementById('word-title');
+        const wordContent = document.getElementById('word-content');
+
+        wordTitle.textContent = post.text + ' - Microsoft Word';
+        wordContent.innerHTML = post.content;
+        wordContent.scrollTop = 0;
+        
+        const timerElement = wordContent.querySelector('.dynamic-timer');
+        if (timerElement) {
+            activeTimerInterval = setInterval(() => {
+                const date = new Date();
+                timerElement.innerText = date.toISOString().split('T')[0] + " " + date.toLocaleTimeString('en-GB') + ":" + date.getMilliseconds();
+            }, 10);
+        }
+        
+        wordWindow.style.display = 'flex';
+        wordWindow.classList.add('visible');
+    }
+
+    // --- Generic App Opener ---
+    function openApp(iconId, windowId) {
+        const icon = document.getElementById(iconId);
+        const windowEl = document.getElementById(windowId);
+        icon.addEventListener('dblclick', () => {
+            if (crtScreen.classList.contains('off')) return;
+            windowEl.style.display = 'flex';
+            windowEl.classList.add('visible');
+        });
+    }
+    openApp('readme-icon', 'notepad-window');
+    openApp('gif-icon', 'preview-window');
+
+    // --- Close Buttons for Windows ---
+    document.querySelector('#notepad-window .close-btn').addEventListener('click', () => { document.getElementById('notepad-window').style.display = 'none'; });
+    document.querySelector('#preview-window .close-btn').addEventListener('click', () => { document.getElementById('preview-window').style.display = 'none'; });
+    document.querySelector('#explorer-window .close-btn').addEventListener('click', () => { document.getElementById('explorer-window').style.display = 'none'; });
+    
+    document.querySelector('#word-window .close-btn').addEventListener('click', () => { 
+        document.getElementById('word-window').style.display = 'none'; 
+        if (activeTimerInterval) {
+            clearInterval(activeTimerInterval);
+        }
+    });
+    
+    // --- File Explorer Logic ---
+    const explorerWindow = document.getElementById('explorer-window');
+    const explorerTitle = document.getElementById('explorer-title');
+    const explorerContent = document.getElementById('explorer-content');
+
+    function openFileExplorer(directory, title) {
+        if (crtScreen.classList.contains('off')) return;
+
+        explorerTitle.textContent = title;
+        explorerContent.innerHTML = `
+            <div class="explorer-header">
+                <div class="col-name">Name</div>
+                <div class="col-type">Type</div>
+            </div>
+            <div class="explorer-files"></div>
+        `;
+
+        const filesContainer = explorerContent.querySelector('.explorer-files');
+        const files = fileDatabase[directory] || [];
+
+        files.forEach(file => {
+            let fileEl;
+            if (directory === 'projects') {
+                fileEl = document.createElement('a');
+                fileEl.href = file.link;
+                fileEl.target = '_blank';
+                fileEl.className = 'file-listing';
+                fileEl.innerHTML = `
+                    <div class="col-name"><span class="icon">🔗</span> ${file.text}</div>
+                    <div class="col-type">External Link</div>
+                `;
+            } else { // Handles 'blog' directory
+                fileEl = document.createElement('div');
+                fileEl.className = 'file-listing';
+                fileEl.innerHTML = `
+                    <div class="col-name"><span class="icon">📄</span> ${file.text}</div>
+                    <div class="col-type">Microsoft Word Document</div>
+                `;
+                fileEl.addEventListener('dblclick', () => {
+                    openBlogPost(file);
+                });
+            }
+            filesContainer.appendChild(fileEl);
+        });
+
+        explorerWindow.style.display = 'flex';
+        explorerWindow.classList.add('visible');
+    }
+
+    document.getElementById('projects-icon').addEventListener('dblclick', () => openFileExplorer('projects', 'C:\\Documents\\Projects'));
+    document.getElementById('blog-icon').addEventListener('dblclick', () => openFileExplorer('blog', 'C:\\Documents\\Blog'));
+
+    // --- CLICK INTERCEPTOR FOR INTERNAL LINKS ---
+    document.getElementById('word-content').addEventListener('click', (event) => {
+        const link = event.target.closest('a');
+        if (!link || !link.href) {
+            return;
+        }
+        
+        const isInternalLink = link.protocol.startsWith('http') && link.hostname === window.location.hostname;
+        if (isInternalLink) {
+            event.preventDefault();
+            const targetPost = fileDatabase.blog.find(post => post.link === link.href);
+            if (targetPost) {
+                openBlogPost(targetPost);
+            }
+        }
+    });
+
+    // --- Draggable items logic ---
+    document.querySelectorAll('.desktop-item').forEach(item => {
+        const handle = item.classList.contains('window') ? item.querySelector('.title-bar') : item;
+        if (!handle) return;
+        handle.addEventListener('mousedown', (e) => {
+            if (crtScreen.classList.contains('off') || e.target.classList.contains('close-btn')) return;
+            e.preventDefault();
+            
+            let offsetX = e.clientX - item.getBoundingClientRect().left;
+            let offsetY = e.clientY - item.getBoundingClientRect().top;
+            const desktopRect = crtScreen.getBoundingClientRect();
+
+            function mouseMoveHandler(e) {
+                let newLeftPx = e.clientX - offsetX - desktopRect.left;
+                let newTopPx = e.clientY - offsetY - desktopRect.top;
+                if (newLeftPx < 0) newLeftPx = 0; if (newTopPx < 0) newTopPx = 0;
+                if (newLeftPx + item.offsetWidth > crtScreen.offsetWidth) newLeftPx = crtScreen.offsetWidth - item.offsetWidth;
+                if (newTopPx + item.offsetHeight > crtScreen.offsetHeight) newTopPx = crtScreen.offsetHeight - item.offsetHeight;
+                item.style.left = `${(newLeftPx / crtScreen.offsetWidth) * 100}%`;
+                item.style.top = `${(newTopPx / crtScreen.offsetHeight) * 100}%`;
+            }
+            function mouseUpHandler() { document.removeEventListener('mousemove', mouseMoveHandler); document.removeEventListener('mouseup', mouseUpHandler); }
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        });
+    });
+
+    // --- Inactivity Listeners ---
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('mousedown', resetInactivityTimer);
+    document.addEventListener('keydown', resetInactivityTimer);
+
+</script>
+
+</body>
+</html>
