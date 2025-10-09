@@ -292,6 +292,7 @@ Feel free to reach out!
     const screensaver = document.getElementById('screensaver');
     let inactivityTimer;
     let activeTimerInterval = null;
+    let topZIndex = 20; // Start above desktop items (which are z-index 10)
 
     // --- DYNAMIC File Database ---
     const fileDatabase = {
@@ -356,6 +357,12 @@ Feel free to reach out!
         }
     });
 
+    // --- Bring window to front ---
+    function bringToFront(windowEl) {
+        topZIndex++;
+        windowEl.style.zIndex = topZIndex;
+    }
+
     // --- REUSABLE FUNCTION TO OPEN A BLOG POST ---
     function openBlogPost(post, updateHistory = true) {
         if (activeTimerInterval) {
@@ -380,6 +387,7 @@ Feel free to reach out!
 
         wordWindow.style.display = 'flex';
         wordWindow.classList.add('visible');
+        bringToFront(wordWindow);
 
         // Update URL to match the blog post
         if (updateHistory) {
@@ -396,6 +404,7 @@ Feel free to reach out!
             if (crtScreen.classList.contains('off')) return;
             windowEl.style.display = 'flex';
             windowEl.classList.add('visible');
+            bringToFront(windowEl);
             if (urlPath) {
                 history.pushState({ type: 'app', windowId: windowId }, '', urlPath);
             }
@@ -473,6 +482,7 @@ Feel free to reach out!
 
         explorerWindow.style.display = 'flex';
         explorerWindow.classList.add('visible');
+        bringToFront(explorerWindow);
 
         // Update URL to match the folder
         if (updateHistory) {
@@ -499,11 +509,13 @@ Feel free to reach out!
             const notepadWindow = document.getElementById('notepad-window');
             notepadWindow.style.display = 'flex';
             notepadWindow.classList.add('visible');
+            bringToFront(notepadWindow);
         } else if (parts[0] === 'funny') {
             // /funny - open funny.gif
             const previewWindow = document.getElementById('preview-window');
             previewWindow.style.display = 'flex';
             previewWindow.classList.add('visible');
+            bringToFront(previewWindow);
         } else if (parts[0] === 'blog') {
             if (parts.length === 1) {
                 // /blog - open blog folder
@@ -567,6 +579,11 @@ Feel free to reach out!
         handle.addEventListener('mousedown', (e) => {
             if (crtScreen.classList.contains('off') || e.target.classList.contains('close-btn')) return;
             e.preventDefault();
+
+            // Bring window to front when clicking on it
+            if (item.classList.contains('window')) {
+                bringToFront(item);
+            }
 
             let offsetX = e.clientX - item.getBoundingClientRect().left;
             let offsetY = e.clientY - item.getBoundingClientRect().top;
