@@ -411,7 +411,11 @@ Feel free to reach out!
 
         wordTitle.textContent = post.text + ' - Microsoft Word';
         wordContent.innerHTML = post.content;
-        wordContent.scrollTop = 0;
+
+        // Reset scroll after content is rendered
+        setTimeout(() => {
+            wordContent.scrollTop = 0;
+        }, 0);
 
         const timerElement = wordContent.querySelector('.dynamic-timer');
         if (timerElement) {
