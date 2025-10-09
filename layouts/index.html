@@ -293,6 +293,7 @@ Feel free to reach out!
     let inactivityTimer;
     let activeTimerInterval = null;
     let topZIndex = 20; // Start above desktop items (which are z-index 10)
+    const windowUrls = new Map(); // Track URL for each window
 
     // --- DYNAMIC File Database ---
     const fileDatabase = {
@@ -358,9 +359,40 @@ Feel free to reach out!
     });
 
     // --- Bring window to front ---
-    function bringToFront(windowEl) {
+    function bringToFront(windowEl, updateUrl = true) {
         topZIndex++;
         windowEl.style.zIndex = topZIndex;
+
+        // Update URL to match this window if it has a stored URL
+        if (updateUrl && windowUrls.has(windowEl.id)) {
+            const url = windowUrls.get(windowEl.id);
+            history.pushState({ type: 'window', windowId: windowEl.id }, '', url);
+        }
+    }
+
+    // --- Find next highest window and update URL ---
+    function updateUrlToTopWindow() {
+        const allWindows = document.querySelectorAll('.window');
+        let topWindow = null;
+        let highestZ = -1;
+
+        allWindows.forEach(win => {
+            if (win.style.display === 'flex' || win.style.display === '') {
+                const zIndex = parseInt(win.style.zIndex || 0);
+                if (zIndex > highestZ) {
+                    highestZ = zIndex;
+                    topWindow = win;
+                }
+            }
+        });
+
+        if (topWindow && windowUrls.has(topWindow.id)) {
+            const url = windowUrls.get(topWindow.id);
+            history.pushState({ type: 'window', windowId: topWindow.id }, '', url);
+        } else {
+            // No windows open, go to root
+            history.pushState({}, '', '/');
+        }
     }
 
     // --- REUSABLE FUNCTION TO OPEN A BLOG POST ---
@@ -387,13 +419,12 @@ Feel free to reach out!
 
         wordWindow.style.display = 'flex';
         wordWindow.classList.add('visible');
-        bringToFront(wordWindow);
 
-        // Update URL to match the blog post
-        if (updateHistory) {
-            const url = new URL(post.link);
-            history.pushState({ type: 'blog-post', post: post }, '', url.pathname);
-        }
+        // Store URL for this window
+        const url = new URL(post.link);
+        windowUrls.set(wordWindow.id, url.pathname);
+
+        bringToFront(wordWindow, updateHistory);
     }
 
     // --- Generic App Opener ---
@@ -404,10 +435,13 @@ Feel free to reach out!
             if (crtScreen.classList.contains('off')) return;
             windowEl.style.display = 'flex';
             windowEl.classList.add('visible');
-            bringToFront(windowEl);
+
+            // Store URL for this window
             if (urlPath) {
-                history.pushState({ type: 'app', windowId: windowId }, '', urlPath);
+                windowUrls.set(windowId, urlPath);
             }
+
+            bringToFront(windowEl);
         });
     }
     openApp('readme-icon', 'notepad-window', '/about');
@@ -416,15 +450,15 @@ Feel free to reach out!
     // --- Close Buttons for Windows ---
     document.querySelector('#notepad-window .close-btn').addEventListener('click', () => {
         document.getElementById('notepad-window').style.display = 'none';
-        history.pushState({}, '', '/');
+        updateUrlToTopWindow();
     });
     document.querySelector('#preview-window .close-btn').addEventListener('click', () => {
         document.getElementById('preview-window').style.display = 'none';
-        history.pushState({}, '', '/');
+        updateUrlToTopWindow();
     });
     document.querySelector('#explorer-window .close-btn').addEventListener('click', () => {
         document.getElementById('explorer-window').style.display = 'none';
-        history.pushState({}, '', '/');
+        updateUrlToTopWindow();
     });
 
     document.querySelector('#word-window .close-btn').addEventListener('click', () => {
@@ -432,7 +466,7 @@ Feel free to reach out!
         if (activeTimerInterval) {
             clearInterval(activeTimerInterval);
         }
-        history.pushState({}, '', '/');
+        updateUrlToTopWindow();
     });
     
     // --- File Explorer Logic ---
@@ -482,12 +516,12 @@ Feel free to reach out!
 
         explorerWindow.style.display = 'flex';
         explorerWindow.classList.add('visible');
-        bringToFront(explorerWindow);
 
-        // Update URL to match the folder
-        if (updateHistory) {
-            history.pushState({ type: 'folder', directory: directory }, '', '/' + directory);
-        }
+        // Store URL for this window
+        const urlPath = '/' + directory;
+        windowUrls.set(explorerWindow.id, urlPath);
+
+        bringToFront(explorerWindow, updateHistory);
     }
 
     document.getElementById('projects-icon').addEventListener('dblclick', () => openFileExplorer('projects', 'C:\\Documents\\Projects'));
@@ -509,13 +543,15 @@ Feel free to reach out!
             const notepadWindow = document.getElementById('notepad-window');
             notepadWindow.style.display = 'flex';
             notepadWindow.classList.add('visible');
-            bringToFront(notepadWindow);
+            windowUrls.set(notepadWindow.id, '/about');
+            bringToFront(notepadWindow, false);
         } else if (parts[0] === 'funny') {
             // /funny - open funny.gif
             const previewWindow = document.getElementById('preview-window');
             previewWindow.style.display = 'flex';
             previewWindow.classList.add('visible');
-            bringToFront(previewWindow);
+            windowUrls.set(previewWindow.id, '/funny');
+            bringToFront(previewWindow, false);
         } else if (parts[0] === 'blog') {
             if (parts.length === 1) {
                 // /blog - open blog folder
