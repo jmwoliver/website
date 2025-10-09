@@ -423,7 +423,7 @@ Feel free to reach out!
     });
 
     
-    function openBlogPost(post) {
+    function openBlogPost(post, updateHistory = true) {
         if (activeTimerInterval) {
             clearInterval(activeTimerInterval);
         }
@@ -435,7 +435,7 @@ Feel free to reach out!
         wordTitle.textContent = post.text + ' - Microsoft Word';
         wordContent.innerHTML = post.content;
         wordContent.scrollTop = 0;
-        
+
         const timerElement = wordContent.querySelector('.dynamic-timer');
         if (timerElement) {
             activeTimerInterval = setInterval(() => {
@@ -443,34 +443,53 @@ Feel free to reach out!
                 timerElement.innerText = date.toISOString().split('T')[0] + " " + date.toLocaleTimeString('en-GB') + ":" + date.getMilliseconds();
             }, 10);
         }
-        
+
         wordWindow.style.display = 'flex';
         wordWindow.classList.add('visible');
+
+        
+        if (updateHistory) {
+            const url = new URL(post.link);
+            history.pushState({ type: 'blog-post', post: post }, '', url.pathname);
+        }
     }
 
     
-    function openApp(iconId, windowId) {
+    function openApp(iconId, windowId, urlPath) {
         const icon = document.getElementById(iconId);
         const windowEl = document.getElementById(windowId);
         icon.addEventListener('dblclick', () => {
             if (crtScreen.classList.contains('off')) return;
             windowEl.style.display = 'flex';
             windowEl.classList.add('visible');
+            if (urlPath) {
+                history.pushState({ type: 'app', windowId: windowId }, '', urlPath);
+            }
         });
     }
-    openApp('readme-icon', 'notepad-window');
-    openApp('gif-icon', 'preview-window');
+    openApp('readme-icon', 'notepad-window', '/about');
+    openApp('gif-icon', 'preview-window', '/funny');
 
     
-    document.querySelector('#notepad-window .close-btn').addEventListener('click', () => { document.getElementById('notepad-window').style.display = 'none'; });
-    document.querySelector('#preview-window .close-btn').addEventListener('click', () => { document.getElementById('preview-window').style.display = 'none'; });
-    document.querySelector('#explorer-window .close-btn').addEventListener('click', () => { document.getElementById('explorer-window').style.display = 'none'; });
-    
-    document.querySelector('#word-window .close-btn').addEventListener('click', () => { 
-        document.getElementById('word-window').style.display = 'none'; 
+    document.querySelector('#notepad-window .close-btn').addEventListener('click', () => {
+        document.getElementById('notepad-window').style.display = 'none';
+        history.pushState({}, '', '/');
+    });
+    document.querySelector('#preview-window .close-btn').addEventListener('click', () => {
+        document.getElementById('preview-window').style.display = 'none';
+        history.pushState({}, '', '/');
+    });
+    document.querySelector('#explorer-window .close-btn').addEventListener('click', () => {
+        document.getElementById('explorer-window').style.display = 'none';
+        history.pushState({}, '', '/');
+    });
+
+    document.querySelector('#word-window .close-btn').addEventListener('click', () => {
+        document.getElementById('word-window').style.display = 'none';
         if (activeTimerInterval) {
             clearInterval(activeTimerInterval);
         }
+        history.pushState({}, '', '/');
     });
     
     
@@ -478,7 +497,7 @@ Feel free to reach out!
     const explorerTitle = document.getElementById('explorer-title');
     const explorerContent = document.getElementById('explorer-content');
 
-    function openFileExplorer(directory, title) {
+    function openFileExplorer(directory, title, updateHistory = true) {
         if (crtScreen.classList.contains('off')) return;
 
         explorerTitle.textContent = title;
@@ -520,10 +539,75 @@ Feel free to reach out!
 
         explorerWindow.style.display = 'flex';
         explorerWindow.classList.add('visible');
+
+        
+        if (updateHistory) {
+            history.pushState({ type: 'folder', directory: directory }, '', '/' + directory);
+        }
     }
 
     document.getElementById('projects-icon').addEventListener('dblclick', () => openFileExplorer('projects', 'C:\\Documents\\Projects'));
     document.getElementById('blog-icon').addEventListener('dblclick', () => openFileExplorer('blog', 'C:\\Documents\\Blog'));
+
+    
+    function handleRoute(path) {
+        
+        path = path.replace(/^\/+/, '');
+        const parts = path.split('/').filter(p => p);
+
+        if (parts.length === 0) {
+            
+            return;
+        }
+
+        if (parts[0] === 'about') {
+            
+            const notepadWindow = document.getElementById('notepad-window');
+            notepadWindow.style.display = 'flex';
+            notepadWindow.classList.add('visible');
+        } else if (parts[0] === 'funny') {
+            
+            const previewWindow = document.getElementById('preview-window');
+            previewWindow.style.display = 'flex';
+            previewWindow.classList.add('visible');
+        } else if (parts[0] === 'blog') {
+            if (parts.length === 1) {
+                
+                openFileExplorer('blog', 'C:\\Documents\\Blog', false);
+            } else {
+                
+                const postSlug = '/' + parts.join('/');
+                const targetPost = fileDatabase.blog.find(post => {
+                    const url = new URL(post.link);
+                    return url.pathname === postSlug || url.pathname === postSlug + '/';
+                });
+                if (targetPost) {
+                    openBlogPost(targetPost, false);
+                }
+            }
+        } else if (parts[0] === 'projects') {
+            
+            openFileExplorer('projects', 'C:\\Documents\\Projects', false);
+        }
+    }
+
+    
+    window.addEventListener('popstate', (event) => {
+        if (event.state) {
+            handleRoute(window.location.pathname);
+        } else {
+            
+            handleRoute(window.location.pathname);
+        }
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        setTimeout(() => {
+            handleRoute(window.location.pathname);
+        }, 1300);
+    });
 
     
     document.getElementById('word-content').addEventListener('click', (event) => {
