@@ -116,6 +116,57 @@
     }
   `;
 
+  const pointVertexShader = /* glsl */ `#version 300 es
+    precision highp float;
+
+    in vec3 aPosition;
+    in float aSize;
+    uniform float uAspect;
+    uniform vec2 uRotation;
+    uniform vec2 uOffset;
+
+    vec3 rotateX(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x, point.y * cosine - point.z * sine, point.y * sine + point.z * cosine);
+    }
+
+    vec3 rotateY(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x * cosine + point.z * sine, point.y, -point.x * sine + point.z * cosine);
+    }
+
+    vec3 rotateZ(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x * cosine - point.y * sine, point.x * sine + point.y * cosine, point.z);
+    }
+
+    void main() {
+      vec3 viewPosition = rotateZ(
+        rotateY(rotateX(aPosition, uRotation.x), uRotation.y),
+        -0.015
+      );
+      viewPosition.xy += uOffset;
+      viewPosition.z -= 15.0;
+
+      float focalLength = 4.01078;
+      float near = 0.1;
+      float far = 100.0;
+      gl_Position = vec4(
+        viewPosition.x * focalLength / uAspect,
+        viewPosition.y * focalLength,
+        ((far + near) / (near - far)) * viewPosition.z + ((2.0 * far * near) / (near - far)),
+        -viewPosition.z
+      );
+
+      // Nearby specks are a little larger, making the shallow motion read as depth.
+      float proximity = clamp((viewPosition.z + 18.5) / 7.0, 0.0, 1.0);
+      gl_PointSize = aSize * mix(1.0, 2.15, proximity);
+    }
+  `;
+
   if (mark && canvas) {
     void (async () => {
       const gl = canvas.getContext("webgl2", {
@@ -139,10 +190,10 @@
         return shader;
       };
 
-      const createProgram = (fragmentSource: string) => {
+      const createProgram = (fragmentSource: string, vertexSource = vertexShader) => {
         const program = gl.createProgram();
         if (!program) throw new Error("Unable to create WebGL program.");
-        const vertex = compileShader(gl.VERTEX_SHADER, vertexShader);
+        const vertex = compileShader(gl.VERTEX_SHADER, vertexSource);
         const fragment = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
         gl.attachShader(program, vertex);
         gl.attachShader(program, fragment);
@@ -174,14 +225,40 @@
 
         const surfaceProgram = createProgram(surfaceFragmentShader);
         const lineProgram = createProgram(lineFragmentShader);
+        const pointProgram = createProgram(lineFragmentShader, pointVertexShader);
         const triangleBuffer = gl.createBuffer();
         const edgeBuffer = gl.createBuffer();
-        if (!triangleBuffer || !edgeBuffer) throw new Error("Unable to create WebGL buffers.");
+        const pointBuffer = gl.createBuffer();
+        if (!triangleBuffer || !edgeBuffer || !pointBuffer) {
+          throw new Error("Unable to create WebGL buffers.");
+        }
 
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, triangleData, gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, edgeBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, edgeData, gl.STATIC_DRAW);
+
+        // A deterministic, sparse ellipsoid keeps every speck well inside the
+        // narrowest version of the mark while still surrounding it in depth.
+        const pointCount = 50;
+        const pointData = new Float32Array(pointCount * 4);
+        let seed = 0x6a6d77;
+        const random = () => {
+          seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+          return seed / 4294967296;
+        };
+        for (let index = 0; index < pointCount; index += 1) {
+          const longitude = random() * Math.PI * 2;
+          const latitude = Math.acos(random() * 2 - 1);
+          const radius = 0.48 + Math.cbrt(random()) * 0.52;
+          const offset = index * 4;
+          pointData[offset] = Math.sin(latitude) * Math.cos(longitude) * radius * 5.8;
+          pointData[offset + 1] = Math.cos(latitude) * radius * 2.7;
+          pointData[offset + 2] = Math.sin(latitude) * Math.sin(longitude) * radius * 3.45;
+          pointData[offset + 3] = 0.72 + random() * 0.48;
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
 
         const surfaceLocations = {
           position: gl.getAttribLocation(surfaceProgram, "aPosition"),
@@ -200,6 +277,14 @@
           rotation: gl.getUniformLocation(lineProgram, "uRotation"),
           offset: gl.getUniformLocation(lineProgram, "uOffset"),
           ink: gl.getUniformLocation(lineProgram, "uInk"),
+        };
+        const pointLocations = {
+          position: gl.getAttribLocation(pointProgram, "aPosition"),
+          size: gl.getAttribLocation(pointProgram, "aSize"),
+          aspect: gl.getUniformLocation(pointProgram, "uAspect"),
+          rotation: gl.getUniformLocation(pointProgram, "uRotation"),
+          offset: gl.getUniformLocation(pointProgram, "uOffset"),
+          ink: gl.getUniformLocation(pointProgram, "uInk"),
         };
 
         const targetRotation = { x: -0.06, y: 0 };
@@ -266,6 +351,19 @@
           gl.vertexAttribPointer(lineLocations.position, 3, gl.SHORT, false, 6, 0);
           gl.depthFunc(gl.LEQUAL);
           gl.drawArrays(gl.LINES, 0, edgeVertexCount);
+
+          gl.useProgram(pointProgram);
+          gl.uniform1f(pointLocations.aspect, aspect);
+          gl.uniform2f(pointLocations.rotation, rotation.x, rotation.y);
+          gl.uniform2f(pointLocations.offset, offset.x, offset.y);
+          gl.uniform3f(pointLocations.ink, ink[0], ink[1], ink[2]);
+          gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
+          gl.enableVertexAttribArray(pointLocations.position);
+          gl.vertexAttribPointer(pointLocations.position, 3, gl.FLOAT, false, 16, 0);
+          gl.enableVertexAttribArray(pointLocations.size);
+          gl.vertexAttribPointer(pointLocations.size, 1, gl.FLOAT, false, 16, 12);
+          gl.depthFunc(gl.LEQUAL);
+          gl.drawArrays(gl.POINTS, 0, pointCount);
 
           if (running) frame = requestAnimationFrame(draw);
         };
@@ -340,8 +438,10 @@
             visibilityObserver.disconnect();
             gl.deleteBuffer(triangleBuffer);
             gl.deleteBuffer(edgeBuffer);
+            gl.deleteBuffer(pointBuffer);
             gl.deleteProgram(surfaceProgram);
             gl.deleteProgram(lineProgram);
+            gl.deleteProgram(pointProgram);
           },
           { once: true },
         );
