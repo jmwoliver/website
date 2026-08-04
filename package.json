@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "check:links": "node scripts/check-links.mjs",
+    "generate:jmw": "node scripts/generate-jmw-model.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -24,5 +25,10 @@
     "astro": "^7.1.6",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "fontkit": "^2.0.4",
+    "geist": "^1.7.2",
+    "three": "^0.179.1"
   }
 }

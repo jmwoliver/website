@@ -1,0 +1,396 @@
+<div class="jmw-mark" data-jmw-mark>
+  <h1 class="jmw-mark__fallback">jmw</h1>
+  <canvas class="jmw-mark__canvas" data-jmw-canvas aria-hidden="true"></canvas>
+</div>
+
+<script>
+  const mark = document.querySelector<HTMLElement>("[data-jmw-mark]");
+  const canvas = mark?.querySelector<HTMLCanvasElement>("[data-jmw-canvas]");
+
+  const vertexShader = /* glsl */ `#version 300 es
+    precision highp float;
+
+    in vec3 aPosition;
+    in vec3 aNormal;
+    uniform float uAspect;
+    uniform float uPositionScale;
+    uniform vec2 uRotation;
+    uniform vec2 uOffset;
+
+    out vec3 vNormal;
+    out vec3 vViewPosition;
+
+    vec3 rotateX(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x, point.y * cosine - point.z * sine, point.y * sine + point.z * cosine);
+    }
+
+    vec3 rotateY(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x * cosine + point.z * sine, point.y, -point.x * sine + point.z * cosine);
+    }
+
+    vec3 rotateZ(vec3 point, float angle) {
+      float sine = sin(angle);
+      float cosine = cos(angle);
+      return vec3(point.x * cosine - point.y * sine, point.x * sine + point.y * cosine, point.z);
+    }
+
+    vec3 transform(vec3 point) {
+      return rotateZ(rotateY(rotateX(point, uRotation.x), uRotation.y), -0.015);
+    }
+
+    void main() {
+      vec3 viewPosition = transform(aPosition / uPositionScale);
+      viewPosition.xy += uOffset;
+      viewPosition.z -= 15.0;
+
+      vNormal = normalize(transform(aNormal));
+      vViewPosition = viewPosition;
+
+      float focalLength = 4.01078;
+      float near = 0.1;
+      float far = 100.0;
+      gl_Position = vec4(
+        viewPosition.x * focalLength / uAspect,
+        viewPosition.y * focalLength,
+        ((far + near) / (near - far)) * viewPosition.z + ((2.0 * far * near) / (near - far)),
+        -viewPosition.z
+      );
+    }
+  `;
+
+  const surfaceFragmentShader = /* glsl */ `#version 300 es
+    precision highp float;
+
+    uniform vec3 uInk;
+    uniform bool uDepthOnly;
+    in vec3 vNormal;
+    in vec3 vViewPosition;
+    out vec4 outColor;
+
+    float bayer4(vec2 position) {
+      int x = int(mod(position.x, 4.0));
+      int y = int(mod(position.y, 4.0));
+      int index = x + y * 4;
+      const float matrix[16] = float[16](
+        0.0, 8.0, 2.0, 10.0,
+        12.0, 4.0, 14.0, 6.0,
+        3.0, 11.0, 1.0, 9.0,
+        15.0, 7.0, 13.0, 5.0
+      );
+      return (matrix[index] + 0.5) / 16.0;
+    }
+
+    void main() {
+      if (!uDepthOnly) {
+        vec3 normal = normalize(vNormal);
+        vec3 lightDirection = normalize(vec3(-0.5, 0.75, 1.0));
+        vec3 viewDirection = normalize(-vViewPosition);
+        float diffuse = dot(normal, lightDirection) * 0.5 + 0.5;
+        float rim = pow(1.0 - max(0.0, dot(normal, viewDirection)), 2.0);
+        float tone = clamp(0.14 + diffuse * 0.68 + rim * 0.18, 0.0, 1.0);
+        if (tone < bayer4(gl_FragCoord.xy)) discard;
+      }
+      outColor = vec4(uInk, 1.0);
+    }
+  `;
+
+  const lineFragmentShader = /* glsl */ `#version 300 es
+    precision highp float;
+    uniform vec3 uInk;
+    out vec4 outColor;
+
+    void main() {
+      outColor = vec4(uInk, 1.0);
+    }
+  `;
+
+  if (mark && canvas) {
+    void (async () => {
+      const gl = canvas.getContext("webgl2", {
+        alpha: true,
+        antialias: false,
+        powerPreference: "low-power",
+      });
+      if (!gl) {
+        mark.dataset.ready = "fallback";
+        return;
+      }
+
+      const compileShader = (type: number, source: string) => {
+        const shader = gl.createShader(type);
+        if (!shader) throw new Error("Unable to create WebGL shader.");
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          throw new Error(gl.getShaderInfoLog(shader) ?? "Unable to compile WebGL shader.");
+        }
+        return shader;
+      };
+
+      const createProgram = (fragmentSource: string) => {
+        const program = gl.createProgram();
+        if (!program) throw new Error("Unable to create WebGL program.");
+        const vertex = compileShader(gl.VERTEX_SHADER, vertexShader);
+        const fragment = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+        gl.attachShader(program, vertex);
+        gl.attachShader(program, fragment);
+        gl.linkProgram(program);
+        gl.deleteShader(vertex);
+        gl.deleteShader(fragment);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          throw new Error(gl.getProgramInfoLog(program) ?? "Unable to link WebGL program.");
+        }
+        return program;
+      };
+
+      try {
+        const response = await fetch("/jmw-model.bin?v=geist-pixel-line-1");
+        if (!response.ok) throw new Error("Unable to load the JMW model.");
+        const model = await response.arrayBuffer();
+        const header = new DataView(model);
+        const magic = String.fromCharCode(...new Uint8Array(model, 0, 4));
+        if (magic !== "JMW2") throw new Error("Unsupported JMW model.");
+
+        const triangleVertexCount = header.getUint32(4, true);
+        const edgeVertexCount = header.getUint32(8, true);
+        const positionScale = header.getFloat32(12, true);
+        const triangleDataLength = triangleVertexCount * 6;
+        const triangleData = new Int16Array(model, 16, triangleDataLength);
+        const edgeData = new Int16Array(model, 16 + triangleData.byteLength, edgeVertexCount * 3);
+
+        const surfaceProgram = createProgram(surfaceFragmentShader);
+        const lineProgram = createProgram(lineFragmentShader);
+        const triangleBuffer = gl.createBuffer();
+        const edgeBuffer = gl.createBuffer();
+        if (!triangleBuffer || !edgeBuffer) throw new Error("Unable to create WebGL buffers.");
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, triangleBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, triangleData, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, edgeBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, edgeData, gl.STATIC_DRAW);
+
+        const surfaceLocations = {
+          position: gl.getAttribLocation(surfaceProgram, "aPosition"),
+          normal: gl.getAttribLocation(surfaceProgram, "aNormal"),
+          aspect: gl.getUniformLocation(surfaceProgram, "uAspect"),
+          positionScale: gl.getUniformLocation(surfaceProgram, "uPositionScale"),
+          rotation: gl.getUniformLocation(surfaceProgram, "uRotation"),
+          offset: gl.getUniformLocation(surfaceProgram, "uOffset"),
+          ink: gl.getUniformLocation(surfaceProgram, "uInk"),
+          depthOnly: gl.getUniformLocation(surfaceProgram, "uDepthOnly"),
+        };
+        const lineLocations = {
+          position: gl.getAttribLocation(lineProgram, "aPosition"),
+          aspect: gl.getUniformLocation(lineProgram, "uAspect"),
+          positionScale: gl.getUniformLocation(lineProgram, "uPositionScale"),
+          rotation: gl.getUniformLocation(lineProgram, "uRotation"),
+          offset: gl.getUniformLocation(lineProgram, "uOffset"),
+          ink: gl.getUniformLocation(lineProgram, "uInk"),
+        };
+
+        const targetRotation = { x: -0.06, y: 0 };
+        const rotation = { x: -0.06, y: 0 };
+        const offset = { x: 0, y: 0 };
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        let ink: [number, number, number] = [0.153, 0.145, 0.122];
+        let aspect = 1;
+        let pointerActive = false;
+        let frame = 0;
+        let running = false;
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.clearColor(0, 0, 0, 0);
+
+        const setTransformUniforms = (
+          locations: typeof surfaceLocations | typeof lineLocations,
+          currentAspect: number,
+        ) => {
+          gl.uniform1f(locations.aspect, currentAspect);
+          gl.uniform1f(locations.positionScale, positionScale);
+          gl.uniform2f(locations.rotation, rotation.x, rotation.y);
+          gl.uniform2f(locations.offset, offset.x, offset.y);
+          gl.uniform3f(locations.ink, ink[0], ink[1], ink[2]);
+        };
+
+        const draw = (time = 0) => {
+          if (!reducedMotion.matches) {
+            if (!pointerActive) {
+              targetRotation.x = -0.06 + Math.sin(time * 0.00033) * 0.055;
+              targetRotation.y = Math.sin(time * 0.00026) * 0.15;
+            }
+            rotation.x += (targetRotation.x - rotation.x) * 0.055;
+            rotation.y += (targetRotation.y - rotation.y) * 0.055;
+            offset.x = Math.sin(time * 0.00021) * 0.055;
+            offset.y = Math.sin(time * 0.00052) * 0.09;
+          }
+
+          gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+          gl.useProgram(surfaceProgram);
+          setTransformUniforms(surfaceLocations, aspect);
+          gl.bindBuffer(gl.ARRAY_BUFFER, triangleBuffer);
+          gl.enableVertexAttribArray(surfaceLocations.position);
+          gl.vertexAttribPointer(surfaceLocations.position, 3, gl.SHORT, false, 12, 0);
+          gl.enableVertexAttribArray(surfaceLocations.normal);
+          gl.vertexAttribPointer(surfaceLocations.normal, 3, gl.SHORT, true, 12, 6);
+
+          gl.colorMask(false, false, false, false);
+          gl.uniform1i(surfaceLocations.depthOnly, 1);
+          gl.depthFunc(gl.LESS);
+          gl.drawArrays(gl.TRIANGLES, 0, triangleVertexCount);
+
+          gl.colorMask(true, true, true, true);
+          gl.uniform1i(surfaceLocations.depthOnly, 0);
+          gl.depthFunc(gl.LEQUAL);
+          gl.drawArrays(gl.TRIANGLES, 0, triangleVertexCount);
+
+          gl.useProgram(lineProgram);
+          setTransformUniforms(lineLocations, aspect);
+          gl.bindBuffer(gl.ARRAY_BUFFER, edgeBuffer);
+          gl.enableVertexAttribArray(lineLocations.position);
+          gl.vertexAttribPointer(lineLocations.position, 3, gl.SHORT, false, 6, 0);
+          gl.depthFunc(gl.LEQUAL);
+          gl.drawArrays(gl.LINES, 0, edgeVertexCount);
+
+          if (running) frame = requestAnimationFrame(draw);
+        };
+
+        const start = () => {
+          if (running || reducedMotion.matches) return;
+          running = true;
+          frame = requestAnimationFrame(draw);
+        };
+
+        const stop = () => {
+          running = false;
+          cancelAnimationFrame(frame);
+        };
+
+        const updateInk = () => {
+          ink = document.documentElement.classList.contains("dark")
+            ? [0.953, 0.918, 0.827]
+            : [0.153, 0.145, 0.122];
+          draw();
+        };
+
+        const resize = () => {
+          const { width, height } = mark.getBoundingClientRect();
+          const pixelScale = Math.min(devicePixelRatio, 1.35) * 0.72;
+          canvas.width = Math.max(1, Math.round(width * pixelScale));
+          canvas.height = Math.max(1, Math.round(height * pixelScale));
+          aspect = width / height;
+          draw();
+        };
+
+        const onPointerMove = (event: PointerEvent) => {
+          if (reducedMotion.matches) return;
+          const rect = mark.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+          const y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+          pointerActive = true;
+          targetRotation.x = -0.06 + y * 0.1;
+          targetRotation.y = x * 0.22;
+        };
+
+        const onPointerLeave = () => {
+          pointerActive = false;
+        };
+
+        const themeObserver = new MutationObserver(updateInk);
+        const resizeObserver = new ResizeObserver(resize);
+        const visibilityObserver = new IntersectionObserver(([entry]) => {
+          if (entry?.isIntersecting) start();
+          else stop();
+        });
+
+        themeObserver.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        resizeObserver.observe(mark);
+        visibilityObserver.observe(mark);
+        mark.addEventListener("pointermove", onPointerMove);
+        mark.addEventListener("pointerleave", onPointerLeave);
+
+        updateInk();
+        resize();
+        mark.dataset.ready = "true";
+
+        document.addEventListener(
+          "astro:before-swap",
+          () => {
+            stop();
+            themeObserver.disconnect();
+            resizeObserver.disconnect();
+            visibilityObserver.disconnect();
+            gl.deleteBuffer(triangleBuffer);
+            gl.deleteBuffer(edgeBuffer);
+            gl.deleteProgram(surfaceProgram);
+            gl.deleteProgram(lineProgram);
+          },
+          { once: true },
+        );
+      } catch {
+        mark.dataset.ready = "fallback";
+      }
+    })();
+  }
+</script>
+
+<style>
+  .jmw-mark {
+    position: relative;
+    width: 100%;
+    height: clamp(10rem, 30vw, 13rem);
+    cursor: default;
+    touch-action: pan-y;
+  }
+
+  .jmw-mark__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    opacity: 0;
+    transition: opacity 220ms ease-out;
+  }
+
+  .jmw-mark__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #27251f;
+    font-family: "Geist Pixel Line", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(4.5rem, 18vw, 7.5rem);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1;
+    transition: opacity 120ms linear;
+  }
+
+  :global(.dark) .jmw-mark__fallback {
+    color: #f3ead3;
+  }
+
+  .jmw-mark[data-ready="true"] .jmw-mark__canvas {
+    opacity: 1;
+  }
+
+  .jmw-mark[data-ready="true"] .jmw-mark__fallback {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jmw-mark__canvas,
+    .jmw-mark__fallback {
+      transition: none;
+    }
+  }
+</style>

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Container from "@components/Container.astro";
 import EntryCard from "@components/EntryCard.astro";
+import JMWMark from "@components/JMWMark.astro";
 import Link from "@components/Link.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { HOME, SITE } from "@consts";
@@ -20,7 +21,8 @@ const projects = (await getCollection("projects"))
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <div class="space-y-16">
-      <section class="space-y-5">
+      <section class="home-intro space-y-5">
+        <JMWMark />
         <div class="space-y-4 font-serif text-[1.05rem] leading-8">
           <p>
             I work at <Link href="https://posit.co/" external>Posit</Link> building data science tools,

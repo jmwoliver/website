@@ -45,6 +45,10 @@ main {
   @apply flex-1 py-32;
 }
 
+.home-intro {
+  @apply -mt-9;
+}
+
 footer {
   @apply py-5 text-sm;
 }
