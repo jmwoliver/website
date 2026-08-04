@@ -1,0 +1,46 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Container from "@components/Container.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import Link from "@components/Link.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { entrySlug, readingTime } from "@lib/utils";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
+  return posts.map((post) => ({ params: { slug: entrySlug(post.id) }, props: post }));
+}
+
+type Props = CollectionEntry<"blog">;
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<PageLayout title={post.data.title} description={post.data.description} type="article">
+  <Container>
+    <div class="mb-10 space-y-8">
+      <Link href="/blog/">&larr; Back to blog</Link>
+      <header class="space-y-2">
+        <div class="flex gap-2 text-sm">
+          <FormattedDate date={post.data.date} />
+          <span aria-hidden="true">&middot;</span>
+          <span>{readingTime(post.body ?? "")}</span>
+        </div>
+        <h1 class="text-3xl font-semibold leading-tight text-black dark:text-white">{post.data.title}</h1>
+        {post.data.tags.length > 0 && <p class="text-sm">{post.data.tags.join(" · ")}</p>}
+      </header>
+    </div>
+    <article><Content /></article>
+  </Container>
+  <script>
+    const timer = document.querySelector<HTMLElement>(".dynamic-timer");
+    if (timer) {
+      const renderTime = () => {
+        const date = new Date();
+        timer.textContent = `${date.toISOString().split("T")[0]} ${date.toLocaleTimeString("en-GB")}:${String(date.getMilliseconds()).padStart(3, "0")}`;
+      };
+      renderTime();
+      window.setInterval(renderTime, 50);
+    }
+  </script>
+</PageLayout>

@@ -1,0 +1,14 @@
+---
+import Container from "@components/Container.astro";
+import ThemeControls from "@components/ThemeControls.astro";
+import { SITE } from "@consts";
+---
+
+<footer>
+  <Container>
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-5 dark:border-white/10">
+      <div>&copy; {new Date().getFullYear()} {SITE.NAME}</div>
+      <ThemeControls />
+    </div>
+  </Container>
+</footer>

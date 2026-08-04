@@ -1,0 +1,22 @@
+---
+type Props = {
+  href: string;
+  external?: boolean;
+  underline?: boolean;
+};
+
+const { href, external = false, underline = true, ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  class:list={[
+    "inline-block text-current transition-colors hover:text-black dark:hover:text-white",
+    underline && "underline decoration-black/20 underline-offset-2 dark:decoration-white/30",
+  ]}
+  {...rest}
+>
+  <slot />
+</a>

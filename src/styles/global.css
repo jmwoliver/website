@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Lora", ui-serif, Georgia, serif;
+}
+
+html {
+  overflow-y: scroll;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply min-h-full;
+}
+
+body {
+  @apply flex min-h-screen flex-col bg-stone-100 font-sans text-black/60 antialiased;
+  @apply dark:bg-stone-900 dark:text-white/75;
+}
+
+header {
+  @apply fixed inset-x-0 top-0 z-50 bg-stone-100/85 py-5 backdrop-blur-sm;
+  @apply dark:bg-stone-900/85;
+}
+
+main {
+  @apply flex-1 py-32;
+}
+
+footer {
+  @apply py-5 text-sm;
+}
+
+article {
+  @apply prose max-w-full prose-stone dark:prose-invert;
+  @apply prose-headings:font-semibold prose-headings:text-black dark:prose-headings:text-white;
+  @apply prose-p:font-serif prose-p:text-[1.05rem] prose-p:leading-8;
+  @apply prose-li:font-serif prose-li:text-[1.05rem] prose-li:leading-8;
+  @apply prose-blockquote:font-serif prose-blockquote:font-normal;
+  @apply prose-img:mx-auto prose-img:rounded-sm;
+}
+
+article a {
+  @apply text-current underline decoration-black/20 underline-offset-2 transition-colors;
+  @apply hover:text-black hover:decoration-black/40;
+  @apply dark:decoration-white/30 dark:hover:text-white dark:hover:decoration-white/60;
+}
+
+article figure {
+  @apply my-8;
+}
+
+article figcaption {
+  @apply mt-2 text-center font-sans text-sm text-black/50 dark:text-white/50;
+}
+
+article pre {
+  @apply overflow-x-auto rounded-lg border border-black/10 dark:border-white/10;
+}
+
+.dynamic-timer {
+  @apply my-8 block font-sans text-xl font-semibold tabular-nums text-black dark:text-white;
+}
+
+::selection {
+  @apply bg-amber-300 text-stone-950;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@components/Container.astro";
+import EntryCard from "@components/EntryCard.astro";
+import Link from "@components/Link.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { HOME, SITE, SOCIALS } from "@consts";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+
+const projects = (await getCollection("projects"))
+  .filter((project) => !project.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <Container>
+    <div class="space-y-16">
+      <section class="space-y-5">
+        <h1 class="text-xl font-semibold text-black dark:text-white">Hello, I'm Jacob.</h1>
+        <div class="space-y-4 font-serif text-[1.05rem] leading-8">
+          <p>
+            I work at <Link href="https://posit.co/" external>Posit</Link> building data science tools,
+            mainly on Package Manager.
+          </p>
+          <p>
+            I love making useful and non-useful things. This is where I keep my projects and write
+            about software, work, and ideas I find interesting.
+          </p>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center justify-between gap-4">
+          <h2 class="font-semibold uppercase tracking-[0.15em] text-black dark:text-white">Projects</h2>
+          <Link href="/projects/">All projects</Link>
+        </div>
+        <ul>
+          {projects.map((project) => <li><EntryCard entry={project} /></li>)}
+        </ul>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center justify-between gap-4">
+          <h2 class="font-semibold uppercase tracking-[0.15em] text-black dark:text-white">Writing</h2>
+          <Link href="/blog/">All posts</Link>
+        </div>
+        <ul>
+          {posts.map((post) => <li><EntryCard entry={post} /></li>)}
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="font-semibold uppercase tracking-[0.15em] text-black dark:text-white">Elsewhere</h2>
+        <p>
+          {SOCIALS.map((social, index) => (
+            <><Link href={social.HREF} external>{social.NAME}</Link>{index < SOCIALS.length - 1 ? " / " : ""}</>
+          ))}
+          {SOCIALS.length > 0 ? " / " : ""}
+          <Link href={`mailto:${SITE.EMAIL}`}>Email</Link>
+        </p>
+      </section>
+    </div>
+  </Container>
+</PageLayout>

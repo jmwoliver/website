@@ -1,0 +1,49 @@
+---
+import Footer from "@components/Footer.astro";
+import Head from "@components/Head.astro";
+import Header from "@components/Header.astro";
+import { SITE } from "@consts";
+
+type Props = {
+  title: string;
+  description: string;
+  type?: "website" | "article";
+  canonicalPath?: string;
+  noindex?: boolean;
+};
+
+const { title, description, type = "website", canonicalPath, noindex = false } = Astro.props;
+const documentTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head title={documentTitle} description={description} type={type} canonicalPath={canonicalPath} noindex={noindex} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      const applyTheme = (preference: string) => {
+        const isDark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", isDark);
+      };
+
+      document.querySelectorAll<HTMLButtonElement>("[data-theme]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const preference = button.dataset.theme ?? "system";
+          localStorage.setItem("theme", preference);
+          applyTheme(preference);
+        });
+      });
+
+      matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        if ((localStorage.getItem("theme") ?? "system") === "system") applyTheme("system");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "jmw-sh",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "check:links": "node scripts/check-links.mjs",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/rss": "^4.0.10",
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource/inter": "^5.0.17",
+    "@fontsource/lora": "^5.0.16",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^7.1.6",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.4.2"
+  }
+}

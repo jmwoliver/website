@@ -1,0 +1,22 @@
+---
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+import { SITE } from "@consts";
+---
+
+<header>
+  <Container>
+    <div class="flex flex-wrap items-center justify-between gap-y-2">
+      <Link href="/" underline={false} aria-label="Jacob Woliver home">
+        <span class="font-semibold text-black dark:text-white">{SITE.NAME}</span>
+      </Link>
+      <nav aria-label="Main navigation" class="flex gap-1 text-sm sm:text-base">
+        <Link href="/blog/">blog</Link>
+        <span aria-hidden="true">/</span>
+        <Link href="/projects/">projects</Link>
+        <span aria-hidden="true">/</span>
+        <Link href="/about/">about</Link>
+      </nav>
+    </div>
+  </Container>
+</header>

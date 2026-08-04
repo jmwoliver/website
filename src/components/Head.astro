@@ -1,0 +1,49 @@
+---
+import "../styles/global.css";
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-600.css";
+import "@fontsource/lora/latin-400.css";
+import "@fontsource/lora/latin-600.css";
+import { SITE } from "@consts";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: "website" | "article";
+  canonicalPath?: string;
+  noindex?: boolean;
+}
+
+const { title, description, image = "/og.png", type = "website", canonicalPath = Astro.url.pathname, noindex = false } = Astro.props;
+const canonicalURL = new URL(canonicalPath, Astro.site);
+const imageURL = new URL(image, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="canonical" href={canonicalURL} />
+<title>{title}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:site_name" content={SITE.NAME} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageURL} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageURL} />
+<link rel="alternate" type="application/rss+xml" title={SITE.NAME} href={new URL("rss.xml", Astro.site)} />
+
+<script is:inline>
+  (() => {
+    const preference = localStorage.getItem("theme") || "system";
+    const isDark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", isDark);
+  })();
+</script>
