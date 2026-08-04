@@ -26,9 +26,19 @@ body {
   @apply dark:bg-stone-900 dark:text-white/75;
 }
 
-header {
+.site-header {
   @apply fixed inset-x-0 top-0 z-50 bg-stone-100/85 py-5 backdrop-blur-sm;
   @apply dark:bg-stone-900/85;
+}
+
+.icon-button {
+  @apply flex size-8 items-center justify-center rounded text-black/45 transition-colors;
+  @apply hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
+  @apply dark:text-white/45 dark:hover:text-white;
+}
+
+.icon-button svg {
+  @apply size-4;
 }
 
 main {

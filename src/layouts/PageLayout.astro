@@ -28,22 +28,26 @@ const documentTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
     </main>
     <Footer />
     <script>
-      const applyTheme = (preference: string) => {
+      const applyTheme = (preference: "light" | "dark" | "system") => {
         const isDark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
         document.documentElement.classList.toggle("dark", isDark);
+
+        const button = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+        if (button) button.ariaLabel = isDark ? "Switch to light theme" : "Switch to dark theme";
       };
 
-      document.querySelectorAll<HTMLButtonElement>("[data-theme]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const preference = button.dataset.theme ?? "system";
-          localStorage.setItem("theme", preference);
-          applyTheme(preference);
-        });
+      const themeButton = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+      themeButton?.addEventListener("click", () => {
+        const preference = document.documentElement.classList.contains("dark") ? "light" : "dark";
+        localStorage.setItem("theme", preference);
+        applyTheme(preference);
       });
 
       matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
         if ((localStorage.getItem("theme") ?? "system") === "system") applyTheme("system");
       });
+
+      applyTheme((localStorage.getItem("theme") as "light" | "dark" | null) ?? "system");
     </script>
   </body>
 </html>
