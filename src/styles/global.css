@@ -7,6 +7,7 @@
   --font-serif: "Lora", ui-serif, Georgia, serif;
   --color-ink: #2e3037;
   --color-paper: #ebe5ce;
+  --color-accent: #b8860b;
 }
 
 html {
@@ -16,6 +17,7 @@ html {
 
 html.dark {
   color-scheme: dark;
+  --color-accent: #d4a574;
 }
 
 html,
@@ -147,7 +149,12 @@ html.dark article pre {
 }
 
 ::selection {
-  @apply bg-ink text-paper dark:bg-paper dark:text-ink;
+  background: var(--color-accent);
+  color: var(--color-paper);
+}
+
+html.dark ::selection {
+  color: var(--color-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
