@@ -1,3 +1,11 @@
+<link
+  rel="preload"
+  href="/jmw-model.bin?v=geist-pixel-line-1"
+  as="fetch"
+  type="application/octet-stream"
+  crossorigin="anonymous"
+/>
+
 <div class="jmw-mark" data-jmw-mark>
   <h1 class="jmw-mark__fallback">jmw</h1>
   <canvas class="jmw-mark__canvas" data-jmw-canvas aria-hidden="true"></canvas>
@@ -148,7 +156,9 @@
       };
 
       try {
-        const response = await fetch("/jmw-model.bin?v=geist-pixel-line-1");
+        const response = await fetch("/jmw-model.bin?v=geist-pixel-line-1", {
+          credentials: "omit",
+        });
         if (!response.ok) throw new Error("Unable to load the JMW model.");
         const model = await response.arrayBuffer();
         const header = new DataView(model);
@@ -343,6 +353,14 @@
 </script>
 
 <style>
+  @font-face {
+    font-family: "Geist Pixel Line";
+    src: url("/fonts/GeistPixel-Line.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 500;
+    font-display: block;
+  }
+
   .jmw-mark {
     position: relative;
     width: 100%;
@@ -372,11 +390,20 @@
     font-weight: 500;
     letter-spacing: 0;
     line-height: 1;
-    transition: opacity 120ms linear;
+    opacity: 0;
+    transition: opacity 160ms ease-out;
   }
 
   :global(.dark) .jmw-mark__fallback {
     color: #f3ead3;
+  }
+
+  .jmw-mark:not([data-ready]) .jmw-mark__fallback {
+    animation: jmw-fallback-reveal 180ms ease-out 180ms forwards;
+  }
+
+  .jmw-mark[data-ready="fallback"] .jmw-mark__fallback {
+    opacity: 1;
   }
 
   .jmw-mark[data-ready="true"] .jmw-mark__canvas {
@@ -385,6 +412,12 @@
 
   .jmw-mark[data-ready="true"] .jmw-mark__fallback {
     opacity: 0;
+  }
+
+  @keyframes jmw-fallback-reveal {
+    to {
+      opacity: 1;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
