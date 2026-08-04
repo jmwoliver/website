@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 const root = new URL("../dist/", import.meta.url).pathname;
-const site = new URL("https://jmw.sh");
+const site = new URL("https://www.jmw.sh");
 
 function filesIn(directory) {
   return readdirSync(directory).flatMap((name) => {

@@ -3,7 +3,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: "https://jmw.sh",
+  site: "https://www.jmw.sh",
   trailingSlash: "always",
   publicDir: "./static",
   integrations: [sitemap()],

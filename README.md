@@ -31,5 +31,5 @@ replaced with standard HTML, so all content now renders directly through Astro.
 
 ## Deploy
 
-Netlify builds the site with `npm run build` and publishes `dist/`. Historical Hugo-era paths are
-redirected to their current `/blog/` routes in `netlify.toml`.
+Vercel deploys the site from `main` with `npm run build` and publishes `dist/`. Pull requests and
+other branches receive preview deployments.
