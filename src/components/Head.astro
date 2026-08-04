@@ -23,7 +23,11 @@ const imageURL = new URL(image, Astro.site);
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
-<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-light-16.png" data-theme-favicon data-light-href="/favicon-light-16.png" data-dark-href="/favicon-dark-16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32.png" data-theme-favicon data-light-href="/favicon-light-32.png" data-dark-href="/favicon-dark-32.png" />
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon-light-64.png" data-theme-favicon data-light-href="/favicon-light-64.png" data-dark-href="/favicon-dark-64.png" />
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon-light.png" data-theme-favicon data-light-href="/favicon-light.png" data-dark-href="/favicon-dark.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-light.png" data-theme-favicon data-light-href="/apple-touch-icon-light.png" data-dark-href="/apple-touch-icon-dark.png" />
 <link rel="canonical" href={canonicalURL} />
 <title>{title}</title>
 <meta name="description" content={description} />
@@ -45,5 +49,11 @@ const imageURL = new URL(image, Astro.site);
     const preference = localStorage.getItem("theme") || "system";
     const isDark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.classList.toggle("dark", isDark);
+
+    document.querySelectorAll("[data-theme-favicon]").forEach((element) => {
+      const favicon = element;
+      const href = isDark ? favicon.dataset.darkHref : favicon.dataset.lightHref;
+      if (href) favicon.setAttribute("href", href);
+    });
   })();
 </script>

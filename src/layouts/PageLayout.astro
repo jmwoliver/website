@@ -32,6 +32,11 @@ const documentTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
         const isDark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
         document.documentElement.classList.toggle("dark", isDark);
 
+        document.querySelectorAll<HTMLLinkElement>("[data-theme-favicon]").forEach((favicon) => {
+          const href = isDark ? favicon.dataset.darkHref : favicon.dataset.lightHref;
+          if (href) favicon.href = href;
+        });
+
         const button = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
         if (button) button.ariaLabel = isDark ? "Switch to light theme" : "Switch to dark theme";
       };
