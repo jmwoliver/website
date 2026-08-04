@@ -206,7 +206,7 @@
         const rotation = { x: -0.06, y: 0 };
         const offset = { x: 0, y: 0 };
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-        let ink: [number, number, number] = [0.153, 0.145, 0.122];
+        let ink: [number, number, number] = [0.1804, 0.1882, 0.2157];
         let aspect = 1;
         let pointerActive = false;
         let frame = 0;
@@ -283,8 +283,8 @@
 
         const updateInk = () => {
           ink = document.documentElement.classList.contains("dark")
-            ? [0.953, 0.918, 0.827]
-            : [0.153, 0.145, 0.122];
+            ? [0.9216, 0.898, 0.8078]
+            : [0.1804, 0.1882, 0.2157];
           draw();
         };
 
@@ -384,7 +384,7 @@
     inset: 0;
     display: grid;
     place-items: center;
-    color: #27251f;
+    color: var(--color-ink);
     font-family: "Geist Pixel Line", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
     font-size: clamp(4.5rem, 18vw, 7.5rem);
     font-weight: 500;
@@ -395,7 +395,7 @@
   }
 
   :global(.dark) .jmw-mark__fallback {
-    color: #f3ead3;
+    color: var(--color-paper);
   }
 
   .jmw-mark:not([data-ready]) .jmw-mark__fallback {

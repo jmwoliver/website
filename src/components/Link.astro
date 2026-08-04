@@ -13,8 +13,8 @@ const { href, external = false, underline = true, ...rest } = Astro.props;
   target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer" : undefined}
   class:list={[
-    "inline-block text-current transition-colors hover:text-black dark:hover:text-white",
-    underline && "underline decoration-black/20 underline-offset-2 dark:decoration-white/30",
+    "inline-block text-current transition-colors hover:text-ink dark:hover:text-paper",
+    underline && "underline decoration-ink/20 underline-offset-2 dark:decoration-paper/30",
   ]}
   {...rest}
 >

@@ -5,6 +5,8 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Lora", ui-serif, Georgia, serif;
+  --color-ink: #2e3037;
+  --color-paper: #ebe5ce;
 }
 
 html {
@@ -22,19 +24,19 @@ body {
 }
 
 body {
-  @apply flex min-h-screen flex-col bg-stone-100 font-sans text-black/60 antialiased;
-  @apply dark:bg-stone-900 dark:text-white/75;
+  @apply flex min-h-screen flex-col bg-paper font-sans text-ink/60 antialiased;
+  @apply dark:bg-ink dark:text-paper/75;
 }
 
 .site-header {
-  @apply fixed inset-x-0 top-0 z-50 bg-stone-100/85 py-5 backdrop-blur-sm;
-  @apply dark:bg-stone-900/85;
+  @apply fixed inset-x-0 top-0 z-50 bg-paper/85 py-5 backdrop-blur-sm;
+  @apply dark:bg-ink/85;
 }
 
 .icon-button {
-  @apply flex size-8 items-center justify-center rounded text-black/45 transition-colors;
-  @apply hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
-  @apply dark:text-white/45 dark:hover:text-white;
+  @apply flex size-8 items-center justify-center rounded text-ink/45 transition-colors;
+  @apply hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
+  @apply dark:text-paper/45 dark:hover:text-paper;
 }
 
 .icon-button svg {
@@ -54,18 +56,73 @@ footer {
 }
 
 article {
-  @apply prose max-w-full prose-stone dark:prose-invert;
-  @apply prose-headings:font-semibold prose-headings:text-black dark:prose-headings:text-white;
+  @apply prose max-w-full dark:prose-invert;
+  @apply prose-headings:font-semibold prose-headings:text-ink dark:prose-headings:text-paper;
   @apply prose-p:font-serif prose-p:text-[1.05rem] prose-p:leading-8;
   @apply prose-li:font-serif prose-li:text-[1.05rem] prose-li:leading-8;
   @apply prose-blockquote:font-serif prose-blockquote:font-normal;
   @apply prose-img:mx-auto prose-img:rounded-sm;
+
+  --tw-prose-body: color-mix(in srgb, var(--color-ink) 75%, transparent);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-lead: color-mix(in srgb, var(--color-ink) 70%, transparent);
+  --tw-prose-links: var(--color-ink);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-counters: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  --tw-prose-bullets: color-mix(in srgb, var(--color-ink) 35%, transparent);
+  --tw-prose-hr: color-mix(in srgb, var(--color-ink) 20%, transparent);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  --tw-prose-captions: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  --tw-prose-kbd: var(--color-ink);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-pre-code: var(--color-paper);
+  --tw-prose-pre-bg: var(--color-ink);
+  --tw-prose-th-borders: color-mix(in srgb, var(--color-ink) 30%, transparent);
+  --tw-prose-td-borders: color-mix(in srgb, var(--color-ink) 15%, transparent);
+  --tw-prose-invert-body: color-mix(in srgb, var(--color-paper) 75%, transparent);
+  --tw-prose-invert-headings: var(--color-paper);
+  --tw-prose-invert-lead: color-mix(in srgb, var(--color-paper) 70%, transparent);
+  --tw-prose-invert-links: var(--color-paper);
+  --tw-prose-invert-bold: var(--color-paper);
+  --tw-prose-invert-counters: color-mix(in srgb, var(--color-paper) 65%, transparent);
+  --tw-prose-invert-bullets: color-mix(in srgb, var(--color-paper) 35%, transparent);
+  --tw-prose-invert-hr: color-mix(in srgb, var(--color-paper) 20%, transparent);
+  --tw-prose-invert-quotes: var(--color-paper);
+  --tw-prose-invert-quote-borders: color-mix(in srgb, var(--color-paper) 25%, transparent);
+  --tw-prose-invert-captions: color-mix(in srgb, var(--color-paper) 55%, transparent);
+  --tw-prose-invert-kbd: var(--color-paper);
+  --tw-prose-invert-code: var(--color-paper);
+  --tw-prose-invert-pre-code: var(--color-paper);
+  --tw-prose-invert-pre-bg: color-mix(in srgb, var(--color-paper) 8%, transparent);
+  --tw-prose-invert-th-borders: color-mix(in srgb, var(--color-paper) 30%, transparent);
+  --tw-prose-invert-td-borders: color-mix(in srgb, var(--color-paper) 15%, transparent);
+}
+
+html.dark article {
+  --tw-prose-body: var(--tw-prose-invert-body);
+  --tw-prose-headings: var(--tw-prose-invert-headings);
+  --tw-prose-lead: var(--tw-prose-invert-lead);
+  --tw-prose-links: var(--tw-prose-invert-links);
+  --tw-prose-bold: var(--tw-prose-invert-bold);
+  --tw-prose-counters: var(--tw-prose-invert-counters);
+  --tw-prose-bullets: var(--tw-prose-invert-bullets);
+  --tw-prose-hr: var(--tw-prose-invert-hr);
+  --tw-prose-quotes: var(--tw-prose-invert-quotes);
+  --tw-prose-quote-borders: var(--tw-prose-invert-quote-borders);
+  --tw-prose-captions: var(--tw-prose-invert-captions);
+  --tw-prose-kbd: var(--tw-prose-invert-kbd);
+  --tw-prose-code: var(--tw-prose-invert-code);
+  --tw-prose-pre-code: var(--tw-prose-invert-pre-code);
+  --tw-prose-pre-bg: var(--tw-prose-invert-pre-bg);
+  --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
+  --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
 }
 
 article a {
-  @apply text-current underline decoration-black/20 underline-offset-2 transition-colors;
-  @apply hover:text-black hover:decoration-black/40;
-  @apply dark:decoration-white/30 dark:hover:text-white dark:hover:decoration-white/60;
+  @apply text-current underline decoration-ink/20 underline-offset-2 transition-colors;
+  @apply hover:text-ink hover:decoration-ink/40;
+  @apply dark:decoration-paper/30 dark:hover:text-paper dark:hover:decoration-paper/60;
 }
 
 article figure {
@@ -73,19 +130,24 @@ article figure {
 }
 
 article figcaption {
-  @apply mt-2 text-center font-sans text-sm text-black/50 dark:text-white/50;
+  @apply mt-2 text-center font-sans text-sm text-ink/50 dark:text-paper/50;
 }
 
 article pre {
-  @apply overflow-x-auto rounded-lg border border-black/10 dark:border-white/10;
+  @apply overflow-x-auto rounded-lg border border-ink/10 dark:border-paper/10;
+  background-color: var(--color-ink) !important;
+}
+
+html.dark article pre {
+  background-color: color-mix(in srgb, var(--color-paper) 8%, var(--color-ink)) !important;
 }
 
 .dynamic-timer {
-  @apply my-8 block font-sans text-xl font-semibold tabular-nums text-black dark:text-white;
+  @apply my-8 block font-sans text-xl font-semibold tabular-nums text-ink dark:text-paper;
 }
 
 ::selection {
-  @apply bg-amber-300 text-stone-950;
+  @apply bg-ink text-paper dark:bg-paper dark:text-ink;
 }
 
 @media (prefers-reduced-motion: reduce) {

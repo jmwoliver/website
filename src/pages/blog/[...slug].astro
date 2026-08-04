@@ -26,7 +26,7 @@ const { Content } = await render(post);
           <span aria-hidden="true">&middot;</span>
           <span>{readingTime(post.body ?? "")}</span>
         </div>
-        <h1 class="text-3xl font-semibold leading-tight text-black dark:text-white">{post.data.title}</h1>
+        <h1 class="text-3xl font-semibold leading-tight text-ink dark:text-paper">{post.data.title}</h1>
         {post.data.tags.length > 0 && <p class="text-sm">{post.data.tags.join(" · ")}</p>}
       </header>
     </div>
