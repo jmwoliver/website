@@ -1,0 +1,23 @@
+---
+import GameConsole from "@components/games/GameConsole.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { GAME_CATALOG, type GameSlug } from "@games/catalog";
+
+export function getStaticPaths() {
+  return GAME_CATALOG.map((game) => ({
+    params: { slug: game.slug },
+    props: { slug: game.slug },
+  }));
+}
+
+type Props = { slug: GameSlug };
+const { slug } = Astro.props;
+const game = GAME_CATALOG.find((entry) => entry.slug === slug)!;
+---
+
+<PageLayout title={game.title} description={game.description}>
+  <div class="mx-auto w-full max-w-4xl px-3 sm:px-5">
+    <h1 class="sr-only">{game.title}</h1>
+    <GameConsole selectedSlug={game.slug} />
+  </div>
+</PageLayout>

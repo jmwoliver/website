@@ -20,3 +20,8 @@ export const PROJECTS: Metadata = {
   TITLE: "Projects",
   DESCRIPTION: "Useful and non-useful things I have made.",
 };
+
+export const GAMES: Metadata = {
+  TITLE: "Games",
+  DESCRIPTION: "Small games made for the browser.",
+};

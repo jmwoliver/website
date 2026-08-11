@@ -1,0 +1,467 @@
+---
+import { GAME_CATALOG, findGame } from "@games/catalog";
+
+type Props = {
+  selectedSlug?: string;
+};
+
+const { selectedSlug } = Astro.props;
+const selectedGame = findGame(selectedSlug);
+---
+
+<section
+  class="game-console"
+  data-game-console
+  data-game-slug={selectedGame?.slug}
+  data-state="booting"
+  tabindex="0"
+  aria-label={selectedGame ? `${selectedGame.title} game console` : "Game console"}
+  aria-describedby={selectedGame ? "game-console-instructions" : undefined}
+>
+  <p class="sr-only" aria-live="polite" data-console-status>Console starting</p>
+  {
+    selectedGame && (
+      <p class="sr-only" id="game-console-instructions">
+        Use the arrow keys or W A S D to aim and choose a club. Use Space, Enter, or Z to swing. Press Escape to pause.
+      </p>
+    )
+  }
+
+  <div class="console-case">
+    <div class="screen-bezel">
+      <div class="screen-glass">
+        <div class="screen-layer boot-screen" aria-hidden="true">
+          <div class="boot-symbol"><i></i><i></i><i></i><i></i></div>
+          <div class="boot-line"></div>
+        </div>
+
+        <div class="screen-layer launcher-screen">
+          <header class="launcher-header">
+            <span>GAMES</span>
+            <span>{GAME_CATALOG.length}/{GAME_CATALOG.length}</span>
+          </header>
+          <nav class="game-grid" aria-label="Available games">
+            {
+              GAME_CATALOG.map((game) => (
+                <a class="game-cartridge" href={`/games/${game.slug}/`} aria-label={`Play ${game.title}: ${game.description}`}>
+                  <span class="cartridge-art"><img src={game.icon} alt="" width="48" height="48" /></span>
+                  <span>{game.title}</span>
+                </a>
+              ))
+            }
+          </nav>
+          <p class="launcher-prompt">SELECT A GAME</p>
+        </div>
+
+        <div class="screen-layer loading-screen" aria-hidden="true">
+          <p>LOADING GAME</p>
+          <div class="loading-blocks"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+
+        <canvas
+          class="game-canvas"
+          data-game-canvas
+          width={selectedGame?.resolution.width ?? 320}
+          height={selectedGame?.resolution.height ?? 240}
+          aria-label={selectedGame ? `${selectedGame.title} game display` : "Game display"}
+        ></canvas>
+
+        <div class="pause-screen screen-dialog">
+          <p class="dialog-title">PAUSED</p>
+          <button type="button" data-console-resume>RESUME</button>
+          <button type="button" data-console-reset>RESTART GAME</button>
+          <a href="/games/">BACK TO MENU</a>
+        </div>
+
+        <div class="error-screen screen-dialog" role="alert">
+          <p class="dialog-title" data-console-error-message>GAME ERROR</p>
+          <a href="/games/">BACK TO GAMES</a>
+        </div>
+
+        <div class="screen-shade" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="console-panel">
+      <div class="speaker" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="console-buttons">
+        <span class="power-light" aria-hidden="true"></span>
+        <button class="power-button" type="button" data-console-power aria-label="Toggle console power" aria-pressed="true">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  import { bootGameConsoles } from "@games/runtime/GameHost";
+  bootGameConsoles();
+</script>
+
+<style>
+  @font-face {
+    font-family: "JMW Pixel";
+    src: url("/fonts/GeistPixel-Line.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  .game-console {
+    --case-light: #cbc3aa;
+    --case-mid: #aaa28c;
+    --case-dark: #706d61;
+    --screen-black: #101916;
+    --screen-ink: #e7ddb9;
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+    outline: none;
+  }
+
+  .game-console:focus-visible .console-case {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 5px;
+  }
+
+  .console-case {
+    position: relative;
+    padding: clamp(18px, 4vw, 40px);
+    padding-bottom: clamp(18px, 3.5vw, 34px);
+    border: 1px solid color-mix(in srgb, var(--case-dark) 75%, black);
+    border-radius: clamp(18px, 4vw, 38px) clamp(18px, 4vw, 38px) clamp(25px, 5vw, 48px) clamp(25px, 5vw, 48px);
+    background:
+      linear-gradient(105deg, rgb(255 255 255 / 12%), transparent 22% 78%, rgb(0 0 0 / 10%)),
+      var(--case-light);
+    box-shadow:
+      inset 2px 2px 0 rgb(255 255 255 / 30%),
+      inset -3px -4px 0 rgb(0 0 0 / 10%),
+      0 22px 45px rgb(20 22 20 / 22%);
+  }
+
+  .screen-bezel {
+    padding: clamp(9px, 2vw, 18px);
+    border-radius: clamp(16px, 3.5vw, 34px);
+    background: #373a35;
+    box-shadow:
+      inset 0 0 0 2px #242622,
+      inset 0 3px 8px rgb(0 0 0 / 75%),
+      0 2px 0 rgb(255 255 255 / 28%);
+  }
+
+  .screen-glass {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 2px solid #111713;
+    border-radius: clamp(12px, 3vw, 28px) / clamp(9px, 2vw, 20px);
+    background: var(--screen-black);
+    box-shadow:
+      inset 0 0 40px 8px rgb(0 0 0 / 80%),
+      0 0 0 1px #555b52;
+    color: var(--screen-ink);
+    font-family: "JMW Pixel", ui-monospace, monospace;
+  }
+
+  .screen-layer,
+  .game-canvas,
+  .screen-dialog {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .boot-screen,
+  .loading-screen {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 16px;
+    background: var(--screen-black);
+  }
+
+  .boot-symbol {
+    display: grid;
+    grid-template-columns: repeat(2, clamp(11px, 2.5vw, 20px));
+    gap: clamp(4px, 1vw, 8px);
+    transform: rotate(45deg);
+  }
+
+  .boot-symbol i {
+    aspect-ratio: 1;
+    border: 2px solid var(--screen-ink);
+  }
+
+  .boot-symbol i:first-child,
+  .boot-symbol i:last-child {
+    background: var(--screen-ink);
+  }
+
+  .boot-line {
+    width: 96px;
+    height: 3px;
+    background: var(--screen-ink);
+    animation: boot-line 620ms steps(5, end) both;
+    transform-origin: left;
+  }
+
+  .launcher-screen {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(14px, 3vw, 28px);
+    background:
+      linear-gradient(90deg, transparent 49%, rgb(231 221 185 / 5%) 50%, transparent 51%),
+      linear-gradient(rgb(231 221 185 / 3%) 1px, transparent 1px),
+      #172b2c;
+    background-size: 48px 100%, 100% 24px, auto;
+  }
+
+  .launcher-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 7px;
+    font-size: clamp(12px, 2.2vw, 18px);
+    letter-spacing: 0.12em;
+  }
+
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    place-items: center;
+    align-content: center;
+    gap: 18px;
+  }
+
+  .game-cartridge {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    min-width: 92px;
+    padding: 9px;
+    color: inherit;
+    font-size: clamp(13px, 2vw, 17px);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .game-cartridge:hover,
+  .game-cartridge:focus-visible {
+    color: #fff5d2;
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    background: rgb(231 221 185 / 9%);
+  }
+
+  .cartridge-art {
+    display: grid;
+    place-items: center;
+    width: clamp(56px, 11vw, 86px);
+    aspect-ratio: 1;
+    border: 3px solid currentColor;
+    background: #253c35;
+    box-shadow: 4px 4px 0 rgb(0 0 0 / 35%);
+  }
+
+  .cartridge-art img {
+    width: 76%;
+    height: 76%;
+    image-rendering: pixelated;
+  }
+
+  .launcher-prompt {
+    margin: 0;
+    text-align: center;
+    font-size: clamp(10px, 1.8vw, 14px);
+    letter-spacing: 0.12em;
+    animation: prompt-blink 1.3s steps(2, end) infinite;
+  }
+
+  .loading-screen {
+    font-size: clamp(12px, 2vw, 17px);
+    letter-spacing: 0.1em;
+  }
+
+  .loading-blocks {
+    display: flex;
+    gap: 5px;
+  }
+
+  .loading-blocks i {
+    width: 12px;
+    height: 12px;
+    border: 2px solid currentColor;
+    animation: load-block 650ms steps(1, end) infinite;
+  }
+
+  .loading-blocks i:nth-child(2) { animation-delay: 100ms; }
+  .loading-blocks i:nth-child(3) { animation-delay: 200ms; }
+  .loading-blocks i:nth-child(4) { animation-delay: 300ms; }
+  .loading-blocks i:nth-child(5) { animation-delay: 400ms; }
+
+  .game-canvas {
+    display: block;
+    object-fit: contain;
+    background: #172b2c;
+    image-rendering: pixelated;
+  }
+
+  .screen-dialog {
+    z-index: 4;
+    place-content: center;
+    justify-items: center;
+    gap: 12px;
+    background: rgb(16 25 22 / 88%);
+    text-align: center;
+  }
+
+  .screen-dialog button,
+  .screen-dialog a {
+    min-width: 150px;
+    border: 2px solid currentColor;
+    padding: 8px 12px;
+    background: #172b2c;
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .screen-dialog button:hover,
+  .screen-dialog button:focus-visible,
+  .screen-dialog a:hover,
+  .screen-dialog a:focus-visible {
+    background: var(--screen-ink);
+    color: var(--screen-black);
+    outline: none;
+  }
+
+  .dialog-title {
+    max-width: 80%;
+    margin: 0 0 6px;
+    font-size: clamp(17px, 4vw, 30px);
+    letter-spacing: 0.12em;
+  }
+
+  .screen-shade {
+    position: absolute;
+    z-index: 8;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 2px, rgb(0 0 0 / 13%) 2px 3px),
+      radial-gradient(ellipse at center, transparent 58%, rgb(0 0 0 / 32%) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  .console-panel {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    min-height: clamp(44px, 8vw, 68px);
+    padding: clamp(10px, 2vw, 18px) 2% 0;
+  }
+
+  .speaker {
+    display: flex;
+    gap: clamp(3px, 0.7vw, 6px);
+    transform: skewX(-7deg);
+  }
+
+  .speaker i {
+    width: clamp(3px, 0.55vw, 5px);
+    height: clamp(22px, 5vw, 40px);
+    border-radius: 999px;
+    background: #777467;
+    box-shadow: inset 1px 1px 1px rgb(0 0 0 / 35%);
+  }
+
+  .console-buttons {
+    display: flex;
+    align-items: center;
+    gap: clamp(7px, 1.5vw, 13px);
+  }
+
+  .power-button:focus-visible { outline: 2px solid #4d4432; outline-offset: 3px; }
+
+  .power-button {
+    display: grid;
+    place-items: center;
+    width: clamp(28px, 5vw, 40px);
+    aspect-ratio: 1;
+    border: 2px solid #5d5a52;
+    border-radius: 50%;
+    background: #969080;
+    box-shadow: inset 2px 2px 2px rgb(255 255 255 / 23%), 1px 2px 1px rgb(0 0 0 / 25%);
+    cursor: pointer;
+  }
+
+  .power-button span {
+    width: 34%;
+    aspect-ratio: 1;
+    border: 2px solid #514f48;
+    border-top-color: transparent;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .power-button span::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -35%;
+    width: 2px;
+    height: 60%;
+    background: #514f48;
+    transform: translateX(-50%);
+  }
+
+  .power-light {
+    width: 7px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #79a54a;
+    box-shadow: 0 0 6px #79a54a;
+  }
+
+  [data-state="booting"] .boot-screen,
+  [data-state="launcher"] .launcher-screen,
+  [data-state="loading"] .loading-screen,
+  [data-state="playing"] .game-canvas,
+  [data-state="paused"] .game-canvas,
+  [data-state="paused"] .pause-screen,
+  [data-state="error"] .error-screen {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  [data-state="paused"] .pause-screen,
+  [data-state="error"] .error-screen { display: grid; }
+
+  [data-state="off"] .screen-glass { background: #050706; }
+  [data-state="off"] .screen-shade { opacity: 0.4; }
+  [data-state="off"] .power-light { background: #5e5d56; box-shadow: none; }
+
+  @keyframes boot-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes prompt-blink { 50% { opacity: 0.35; } }
+  @keyframes load-block { 0%, 40% { background: currentColor; } 41%, 100% { background: transparent; } }
+
+  @media (max-width: 430px) {
+    .console-case { padding-inline: 12px; }
+    .case-button { padding-inline: 6px; }
+    .eject-button { display: none; }
+    .screen-dialog { gap: 7px; }
+    .screen-dialog button,
+    .screen-dialog a { min-width: 130px; padding-block: 6px; font-size: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boot-line,
+    .launcher-prompt,
+    .loading-blocks i { animation: none; }
+  }
+</style>

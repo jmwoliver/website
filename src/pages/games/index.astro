@@ -1,0 +1,12 @@
+---
+import GameConsole from "@components/games/GameConsole.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { GAMES } from "@consts";
+---
+
+<PageLayout title={GAMES.TITLE} description={GAMES.DESCRIPTION}>
+  <div class="mx-auto w-full max-w-4xl px-3 sm:px-5">
+    <h1 class="sr-only">Games</h1>
+    <GameConsole />
+  </div>
+</PageLayout>
