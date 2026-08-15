@@ -8,7 +8,7 @@ type Props = {
 
 const { entry } = Astro.props;
 const isProject = entry.collection === "projects";
-const href = isProject ? entry.data.repoURL : `/blog/${entrySlug(entry.id)}/`;
+const href = isProject ? (entry.data.demoURL ?? entry.data.repoURL) : `/blog/${entrySlug(entry.id)}/`;
 ---
 
 <a
